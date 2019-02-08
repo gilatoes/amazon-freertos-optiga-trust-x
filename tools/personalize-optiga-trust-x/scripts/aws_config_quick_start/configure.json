@@ -1,0 +1,12 @@
+{
+    "aws_config" : {
+        "thing_name": "thing_name",
+        "policy_name": "policy_name"
+    },
+    "optiga_trust_config": {
+        "certificate_objectid": "0xE0E1",
+        "privatekey_objectid": "0xE0F1",
+        "executable_path": "../../executables/libusb_win32_x86",
+        "i2c_device": ""
+    }
+}
