@@ -22,32 +22,50 @@
 * SOFTWARE
 *
 *
-* \file
+* \file pal_os_lock.c
 *
-* \brief This file defines the memory management related macros.
+* \brief   This file implements the platform abstraction layer APIs for os locks (e.g. semaphore).
 *
-*
-* \ingroup  grMutualAuth
-*
+* \ingroup  grPAL
+* @{
 */
 
-#ifndef _MEMMGMT_H_
-#define _MEMMGMT_H_
+#include "optiga/pal/pal_os_lock.h"
 
-///Malloc function to allocate the heap memory
-#define OCP_MALLOC(size)			pvPortMalloc(size)
+/**
+ * @brief PAL OS lock structure. Might be extended if needed
+ */
+typedef struct pal_os_lock
+{
+    uint8_t lock;
+} pal_os_lock_t;
 
-///Malloc function to allocate the heap memory
-#define OCP_CALLOC(block,blocksize)	calloc(block,blocksize)
+volatile static pal_os_lock_t pal_os_lock = {.lock = 0};
 
-///To free the allocated memory
-#define OCP_FREE(node)				vPortFree(node)
+pal_status_t pal_os_lock_acquire(void)
+{
+    pal_status_t return_status = PAL_STATUS_FAILURE;
 
-///To copy the data from source to destination 
-#define OCP_MEMCPY(dst,src,size)	memcpy(dst,src,size)
+    if(!(pal_os_lock.lock))
+    {
+    	pal_os_lock.lock++;
+        if(pal_os_lock.lock != 1)
+        {
+        	pal_os_lock.lock--;
+        }
+        return_status = PAL_STATUS_SUCCESS;
+    }
+    return return_status;
+}
 
-///To copy the data from source to destination 
-#define OCP_MEMSET(src,val,size)	memset(src,val,size)
+void pal_os_lock_release(void)
+{
+    if(pal_os_lock.lock)
+    {
+    	pal_os_lock.lock--;
+    }
+}
 
-#endif /* _MEMMGMT_H_ */
-
+/**
+* @}
+*/
