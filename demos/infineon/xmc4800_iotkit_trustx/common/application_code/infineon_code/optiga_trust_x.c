@@ -23,9 +23,6 @@ uint32_t CLIENT_CERTIFICATE_LENGTH;
 
 // Not used, but required for mbedTLS...
 const char CLIENT_PRIVATE_KEY_PEM[] =
-"-----BEGIN EC PARAMETERS-----\n"
-"BggqhkjOPQMBBw==\n"
-"-----END EC PARAMETERS-----\n"
 "-----BEGIN EC PRIVATE KEY-----\n"
 "MHcCAQEEIH84O6hf145Awun9lH6GbesjSmwJ5w1ODaYhp7xLZRA3oAoGCCqGSM49\n"
 "AwEHoUQDQgAEb5ERgUCa0019j5JWdEiH0JyldJF9cv/MW2Lx94n9HVJ9FiQcooFi\n"
