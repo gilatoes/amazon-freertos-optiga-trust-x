@@ -8,3 +8,8 @@ demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
 demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
 demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/language.settings.xml
 demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
+*.mk
+*.lst
+*.o
+*.d
+demos/infineon/xmc4800_iotkit_trustx/dave4/Debug/makefile
