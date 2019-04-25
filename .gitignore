@@ -1,3 +1,10 @@
 # Ignore uncrustify backups
 *.unc*
 doc/html/*
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/language.settings.xml
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/language.settings.xml
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/language.settings.xml
+demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
