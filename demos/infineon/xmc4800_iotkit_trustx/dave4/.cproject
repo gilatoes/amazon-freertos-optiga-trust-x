@@ -30,11 +30,11 @@
 								<option id="com.ifx.xmc4000.compiler.option.misc.mfloat.1027108073" name="Floating point" superClass="com.ifx.xmc4000.compiler.option.misc.mfloat" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
 								<option id="com.ifx.xmc4000.compiler.option.include.paths.1372611141" name="Include paths (-I)" superClass="com.ifx.xmc4000.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/examples/ecdsa_utils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/examples/authenticate_chip}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/ecdsa_utils}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/authenticate_chip}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/jsmn}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/optiga/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/pal/xmc4800_freertos/i2c_master_dave}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/optiga/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/pal/xmc4800_freertos/i2c_master_dave}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/CMSIS/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/CMSIS/Infineon/XMC4800_series/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/drivers/inc}&quot;"/>
@@ -122,7 +122,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="lib/third_party/trustx/pal/xmc4800_freertos/global_ccu4|lib/third_party/trustx/pal/xmc4800_freertos/timer|lib/third_party/trustx/pal/xmc4800_freertos/interrupt" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lib/third_party/trustm/externals|lib/third_party/trustm/pal/xmc4800_freertos/global_ccu4|lib/third_party/trustm/pal/xmc4800_freertos/interrupt|lib/third_party/trustm/pal/xmc4800_freertos/timer|lib/third_party/trustm/pal/xmc4800_freertos/global_ccu4|lib/third_party/trustm/pal/xmc4800_freertos/timer|lib/third_party/trustm/pal/xmc4800_freertos/interrupt" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -158,10 +158,10 @@
 								<option id="com.ifx.xmc4000.compiler.option.misc.mfloat.1517610586" name="Floating point" superClass="com.ifx.xmc4000.compiler.option.misc.mfloat" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
 								<option id="com.ifx.xmc4000.compiler.option.include.paths.898122737" name="Include paths (-I)" superClass="com.ifx.xmc4000.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/examples/ecdsa_utils}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/examples/authenticate_chip}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/optiga/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustx/pal/xmc4800_freertos/i2c_master_dave}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/ecdsa_utils}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/authenticate_chip}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/optiga/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/pal/xmc4800_freertos/i2c_master_dave}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/CMSIS/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/CMSIS/Infineon/XMC4800_series/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/drivers/inc}&quot;"/>
@@ -234,9 +234,9 @@
 								</inputType>
 							</tool>
 							<tool id="com.ifx.xmc4000.appDebug.cpplinker.916999358" name="ARM-GCC C++ Linker" superClass="com.ifx.xmc4000.appDebug.cpplinker">
-								<option id="com.ifx.xmc4000.appCppLinker.option.misc.fpu.2140942799" name="Fpu (-mfpu)" superClass="com.ifx.xmc4000.appCppLinker.option.misc.fpu" value="org.eclipse.cdt.cross.arm.gnu.base.option.mfpu.fpv4-sp-d16" valueType="enumerated"/>
-								<option id="com.ifx.xmc4000.appCppLinker.option.misc.mfloat.1585105410" name="Floating point" superClass="com.ifx.xmc4000.appCppLinker.option.misc.mfloat" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
-								<option id="com.ifx.xmc4000.appCppLinker.option.nosys.specs.1532151080" name="Provide default newlib system calls (-specs=nosys.specs)" superClass="com.ifx.xmc4000.appCppLinker.option.nosys.specs" value="true" valueType="boolean"/>
+								<option id="com.ifx.xmc4000.appCppLinker.option.misc.fpu.2140942799" name="Fpu (-mfpu)" superClass="com.ifx.xmc4000.appCppLinker.option.misc.fpu" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.mfpu.fpv4-sp-d16" valueType="enumerated"/>
+								<option id="com.ifx.xmc4000.appCppLinker.option.misc.mfloat.1585105410" name="Floating point" superClass="com.ifx.xmc4000.appCppLinker.option.misc.mfloat" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
+								<option id="com.ifx.xmc4000.appCppLinker.option.nosys.specs.1532151080" name="Provide default newlib system calls (-specs=nosys.specs)" superClass="com.ifx.xmc4000.appCppLinker.option.nosys.specs" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.ifx.xmc4000.appCppLinker.option.scriptfile.217531763" name="Script file (-T)" superClass="com.ifx.xmc4000.appCppLinker.option.scriptfile" useByScannerDiscovery="false" value="../XMC4800x2048.ld" valueType="string"/>
 								<inputType id="com.ifx.xmc4000.appCppLinker.inputType.1749123859" name="ARM-GCC for XMC Linker Input Type" superClass="com.ifx.xmc4000.appCppLinker.inputType">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -283,7 +283,9 @@
 							<tool id="com.ifx.xmc4000.appDebug.compiler.1360941681" name="ARM-GCC C Compiler" superClass="com.ifx.xmc4000.appDebug.compiler.268429070">
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1411572845" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 							</tool>
-							<tool id="com.ifx.xmc4000.appDebug.cppcompiler.27142868" name="ARM-GCC C++ Compiler" superClass="com.ifx.xmc4000.appDebug.cppcompiler.1676119801"/>
+							<tool id="com.ifx.xmc4000.appDebug.cppcompiler.27142868" name="ARM-GCC C++ Compiler" superClass="com.ifx.xmc4000.appDebug.cppcompiler.1676119801">
+								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input.875339124" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input"/>
+							</tool>
 							<tool id="com.ifx.xmc4000.appDebug.assembler.680031850" name="ARM-GCC Assembler" superClass="com.ifx.xmc4000.appDebug.assembler.909660102">
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.1093950288" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input"/>
 							</tool>
@@ -295,8 +297,39 @@
 							<tool id="com.ifx.xmc4000.printsize.1002465412" name="ARM-GCC Print Size" superClass="com.ifx.xmc4000.printsize.1112383824"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.ifx.xmc4000.appDebug.1480183648.1766097908" name="pal_crypt_mbedtls.c" rcbsApplicability="disable" resourcePath="lib/third_party/trustm/pal/xmc4800_freertos/pal_crypt_mbedtls.c" toolsToInvoke="com.ifx.xmc4000.appDebug.compiler.268429070.1767897344">
+						<tool id="com.ifx.xmc4000.appDebug.compiler.268429070.1767897344" name="ARM-GCC C Compiler" superClass="com.ifx.xmc4000.appDebug.compiler.268429070">
+							<option id="com.ifx.xmc4000.compiler.option.include.paths.2112746053" name="Include paths (-I)" superClass="com.ifx.xmc4000.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/ecdsa_utils}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/authenticate_chip}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/optiga/include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/pal/xmc4800_freertos/i2c_master_dave}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/CMSIS/Include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/CMSIS/Infineon/XMC4800_series/Include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/drivers/inc}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/XMCLib/2.1.20/third_party/ESP_AT_Lib/src/include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/aws/include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/aws/include/private}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/aws/FreeRTOS/portable/GCC/ARM_CM4F}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/application_code/common_demos/include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/application_code/infineon_code}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/mbedtls/include}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/pkcs11}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/config_files}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/jsmn}&quot;"/>
+							</option>
+							<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1245354890" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
+						</tool>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1320651294" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.2003022203" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.1981566911" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="lib/third_party/trustx/pal/xmc4800_freertos/global_ccu4|lib/third_party/trustx/pal/xmc4800_freertos/timer|lib/third_party/trustx/pal/xmc4800_freertos/interrupt" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lib/third_party/trustm/externals|lib/third_party/trustm/pal/xmc4800_freertos/global_ccu4|lib/third_party/trustm/pal/xmc4800_freertos/interrupt|lib/third_party/trustm/pal/xmc4800_freertos/timer|lib/third_party/trustm/pal/xmc4800_freertos/global_ccu4|lib/third_party/trustm/pal/xmc4800_freertos/timer|lib/third_party/trustm/pal/xmc4800_freertos/interrupt" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

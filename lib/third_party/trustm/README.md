@@ -3,7 +3,7 @@
 # OPTIGA&trade; Trust M1 Software Framework
 
 [tocstart]: # (toc start)
-
+ 
 1. **Security Chip**
     * [Description](#description)
     * [Summary](#summary)

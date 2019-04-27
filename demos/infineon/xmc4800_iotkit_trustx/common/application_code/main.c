@@ -27,7 +27,7 @@
 
 #include "console_io.h"
 #include "entropy_hardware.h"
-#include "optiga_trust_x.h"
+#include "optiga_trust_m.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -119,7 +119,8 @@ static void prvMiscInitialization( void )
 
 void vApplicationDaemonTaskStartupHook( void )
 {
-	OPTIGA_TRUST_X_Init();
+	//OPTIGA_TRUST_X_Init();
+	OPTIGA_TRUST_M_Init();
     
     /* Initialize the AWS Libraries system. */
     if ( SYSTEM_Init() == pdPASS )
