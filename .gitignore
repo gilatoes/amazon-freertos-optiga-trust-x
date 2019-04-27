@@ -13,3 +13,7 @@ demos/infineon/xmc4800_iotkit_trustx/dave4/.settings/com.dave.mbs.xc800.prefs
 *.o
 *.d
 demos/infineon/xmc4800_iotkit_trustx/dave4/Debug/makefile
+demos/infineon/xmc4800_iotkit_trustx/dave4/Release/aws_demos.elf
+*.hex
+*.map
+*.rsp
