@@ -17,3 +17,8 @@ demos/infineon/xmc4800_iotkit_trustx/dave4/Release/aws_demos.elf
 *.hex
 *.map
 *.rsp
+demos/infineon/xmc4800_iotkit_trustx/dave4/Release/makefile
+demos/infineon/xmc4800_iotkit_trustx/dave4/Debug/aws_demos.elf
+demos/infineon/xmc4800_iotkit_trustx/dave4/Release/makefile
+demos/infineon/xmc4800_iotkit_trustx/dave4/Release/makefile
+demos/infineon/xmc4800_iotkit_trustx/dave4/Release/makefile
