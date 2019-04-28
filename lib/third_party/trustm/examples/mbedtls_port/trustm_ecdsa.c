@@ -37,6 +37,21 @@
 
 #include "optiga/optiga_crypt.h"
 #include "optiga/optiga_util.h"
+#include "optiga/common/optiga_lib_common.h"
+
+/**
+ * Callback when optiga_crypt_xxxx operation is completed asynchronously
+ */
+static volatile optiga_lib_status_t optiga_lib_status;
+//lint --e{818} suppress "argument "context" is not used in the sample provided"
+static void optiga_crypt_callback(void * context, optiga_lib_status_t return_status)
+{
+    optiga_lib_status = return_status;
+    if (NULL != context)
+    {
+        // callback to upper layer here
+    }
+}
 
 #if defined(MBEDTLS_ECDSA_SIGN_ALT)
 
@@ -45,14 +60,21 @@ int mbedtls_ecdsa_sign( mbedtls_ecp_group *grp, mbedtls_mpi *r, mbedtls_mpi *s,
                 const mbedtls_mpi *d, const unsigned char *buf, size_t blen,
                 int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-#if 0
+
 	int ret;
 	uint8_t der_signature[110];
 	uint16_t dslen = sizeof(der_signature);
     unsigned char *p = der_signature;
     const unsigned char *end = der_signature + dslen;
+    optiga_crypt_t * me = NULL;
 
-    if(optiga_crypt_ecdsa_sign((unsigned char *)buf, blen, OPTIGA_KEY_STORE_ID_E0F1, der_signature, &dslen) != OPTIGA_LIB_SUCCESS)
+	me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
+	if (NULL == me)
+	{
+		return 1;
+	}
+
+    if(optiga_crypt_ecdsa_sign(me, (unsigned char *)buf, blen, OPTIGA_KEY_ID_E0F1, der_signature, &dslen) != OPTIGA_LIB_SUCCESS)
     {
 		ret = MBEDTLS_ERR_PK_BAD_INPUT_DATA;
 		goto cleanup;
@@ -63,7 +85,6 @@ int mbedtls_ecdsa_sign( mbedtls_ecp_group *grp, mbedtls_mpi *r, mbedtls_mpi *s,
 	
 cleanup:
     return ret;
-#endif
 
 }
 #endif
@@ -75,8 +96,7 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
                   const mbedtls_ecp_point *Q, const mbedtls_mpi *r, const mbedtls_mpi *s)
 {
 
-#if 0
-	optiga_lib_status_t status = OPTIGA_LIB_ERROR;
+	optiga_lib_status_t status = OPTIGA_DEVICE_ERROR;
     public_key_from_host_t public_key;
     uint8_t public_key_out [100];
 	uint8_t signature [110];
@@ -85,6 +105,14 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
 	size_t public_key_len = 0;
 	uint8_t truncated_hash_length;
 	
+    optiga_crypt_t * me = NULL;
+
+	me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
+	if (NULL == me)
+	{
+		return 1;
+	}
+
 	signature_len = mbedtls_asn1_write_mpi( &p, signature, s );
     signature_len+= mbedtls_asn1_write_mpi( &p, signature, r );
 	
@@ -104,15 +132,15 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
         return 1;
     }
 
-    grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( public_key.curve = OPTIGA_ECC_NIST_P_256 )
-                                            : ( public_key.curve = OPTIGA_ECC_NIST_P_384 );
+    grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( public_key.key_type = OPTIGA_ECC_CURVE_NIST_P_256 )
+                                            : ( public_key.key_type = OPTIGA_ECC_CURVE_NIST_P_384 );
 
     public_key_out [0] = 0x03;
     public_key_out [1] = public_key_len + 1;
     public_key_out [2] = 0x00;
     public_key.length = public_key_len + 3;//including 3 bytes overhead
 
-    if ( public_key.curve == OPTIGA_ECC_NIST_P_256 )
+    if ( public_key.key_type == OPTIGA_ECC_CURVE_NIST_P_256 )
     {
         truncated_hash_length = 32; //maximum bytes of hash length for the curve
     }
@@ -128,7 +156,7 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
         blen = truncated_hash_length;
     }
 
-    status = optiga_crypt_ecdsa_verify ( (uint8_t *) buf, blen,
+    status = optiga_crypt_ecdsa_verify ( me, (uint8_t *) buf, blen,
                                          (uint8_t *) p, signature_len,
 										 OPTIGA_CRYPT_HOST_DATA, (void *)&public_key );
     if ( status != OPTIGA_LIB_SUCCESS )
@@ -137,7 +165,6 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
     }
 	
     return status;
-#endif
 
 }
 #endif
@@ -151,7 +178,14 @@ int mbedtls_ecdsa_genkey( mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
     size_t public_key_len = sizeof( public_key );
     optiga_ecc_curve_t curve_id;
 	mbedtls_ecp_group *grp = &ctx->grp;
-	uint16_t privkey_oid = OPTIGA_KEY_STORE_ID_E0F0;
+	uint16_t privkey_oid = OPTIGA_KEY_ID_E0F0;
+    optiga_crypt_t * me = NULL;
+
+	me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
+	if (NULL == me)
+	{
+		return 1;
+	}
  
 	mbedtls_ecp_group_load( &ctx->grp, gid );
  
@@ -161,10 +195,10 @@ int mbedtls_ecdsa_genkey( mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
 	{
 		return 1;
 	}
-	grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( curve_id = OPTIGA_ECC_NIST_P_256 )
-                                                : ( curve_id = OPTIGA_ECC_NIST_P_384 ); 
+	grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( curve_id = OPTIGA_ECC_CURVE_NIST_P_256 )
+                                                : ( curve_id = OPTIGA_ECC_CURVE_NIST_P_384 );
     //invoke optiga command to generate a key pair.
-	status = optiga_crypt_ecc_generate_keypair( curve_id,
+	status = optiga_crypt_ecc_generate_keypair( me, curve_id,
                                                 (optiga_key_usage_t)( OPTIGA_KEY_USAGE_KEY_AGREEMENT | OPTIGA_KEY_USAGE_AUTHENTICATION ),
 												FALSE,
 												&privkey_oid,
