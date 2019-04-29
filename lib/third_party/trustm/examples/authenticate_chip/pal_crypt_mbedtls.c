@@ -274,10 +274,6 @@ optiga_lib_status_t pal_crypt_init(void)
 	mbedtls_entropy_init( &entropy );
 	uint8_t personalization[32];
 
-    /**
-     * 1. Create OPTIGA Crypt Instance
-     *
-     */
     me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
     if (NULL == me)
     {

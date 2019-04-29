@@ -83,12 +83,6 @@ static void read_ifx_cert(void)
             return;
         }
 
-        //return_status = optiga_util_read_data(me,
-        //                                      optiga_oid,
-        //                                      offset,
-        //                                      read_data_buffer,
-        //                                      &bytes_to_read);
-
 		while ( (status = optiga_util_read_data(me, optiga_oid, 0, ifx_cert_hex, &ifx_cert_hex_len)) != OPTIGA_LIB_SUCCESS);
 
 		mbedtls_base64_encode((unsigned char *)ifx_cert_b64_temp, sizeof(ifx_cert_b64_temp),
