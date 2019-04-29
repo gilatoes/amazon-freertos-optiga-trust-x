@@ -1,7 +1,8 @@
 /**
+* \copyright
 * MIT License
 *
-* Copyright (c) 2018 Infineon Technologies AG
+* Copyright (c) 2019 Infineon Technologies AG
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +22,16 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE
 *
+* \endcopyright
 *
-* \file
+* \author Infineon Technologies AG
 *
-* \brief This file implements the platform abstraction layer APIs for timer.
+* \file pal_os_timer.c
+*
+* \brief   This file implements the platform abstraction layer APIs for timer.
 *
 * \ingroup  grPAL
+*
 * @{
 */
 
@@ -65,7 +70,7 @@
 uint32_t pal_os_timer_get_time_in_microseconds(void)
 {
     // !!!OPTIGA_LIB_PORTING_REQUIRED
-    // This API is needed to support optiga cmd scheduler.
+    // This API is needed to support optiga cmd scheduler. 
     static uint32_t count = 0;
     // The implementation must ensure that every invocation of this API returns a unique value.
     return (count++);
@@ -93,7 +98,17 @@ void pal_os_timer_delay_in_milliseconds(uint16_t milliseconds)
     const TickType_t xDelay = milliseconds / portTICK_PERIOD_MS;
 	vTaskDelay( xDelay );
 }
+//lint --e{714} suppress "This is implemented for overall completion of API"
+pal_status_t pal_timer_init(void)
+{
+    return PAL_STATUS_SUCCESS;
+}
 
+//lint --e{714} suppress "This is implemented for overall completion of API"
+pal_status_t pal_timer_deinit(void)
+{
+    return PAL_STATUS_SUCCESS;
+}
 /**
 * @}
 */

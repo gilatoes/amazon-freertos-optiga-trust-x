@@ -1,7 +1,8 @@
 /**
+* \copyright
 * MIT License
 *
-* Copyright (c) 2018 Infineon Technologies AG
+* Copyright (c) 2019 Infineon Technologies AG
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +22,16 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE
 *
+* \endcopyright
 *
-* \file
+* \author Infineon Technologies AG
 *
-* \brief This file implements the platform abstraction layer APIs for os event/scheduler.
+* \file pal_os_event.c
+*
+* \brief   This file implements the platform abstraction layer APIs for os event/scheduler.
 *
 * \ingroup  grPAL
+*
 * @{
 */
 
@@ -329,8 +334,10 @@ void scheduler_timer_isr(void)
 {
     register_callback callback;
 
+    // !!!OPTIGA_LIB_PORTING_REQUIRED
+    // The following steps related to TIMER must be taken care while porting to different platform
     TIMER_ClearEvent(&scheduler_timer);
-    //lint --e{534} suppress "Return value is not required to be checked"
+    //lint --e{534} suppress "Error handling is not required so return value is not checked"
     TIMER_Stop(&scheduler_timer);
     TIMER_Clear(&scheduler_timer);
 
@@ -364,8 +371,10 @@ void pal_os_event_register_callback_oneshot(register_callback callback,
     callback_registered = callback;
     callback_ctx = callback_args;
 
-    //lint --e{534} suppress "Return value is not required to be checked"
-    TIMER_SetTimeInterval(&scheduler_timer , (time_us*100));
+    // !!!OPTIGA_LIB_PORTING_REQUIRED
+    // The following steps related to TIMER must be taken care while porting to different platform
+    //lint --e{534} suppress "Error handling is not required so return value is not checked"
+    TIMER_SetTimeInterval(&scheduler_timer, (time_us * 100));
     TIMER_Start(&scheduler_timer);
 }
 
