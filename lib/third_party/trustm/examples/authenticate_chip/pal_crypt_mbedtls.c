@@ -32,7 +32,6 @@
 */
 
 #include "optiga/pal/pal_os_timer.h"
-//#include "optiga/common/MemoryMgmt.h"
 #include "optiga/pal/pal_memory_mgmt.h"
 #include "optiga/optiga_crypt.h"
 
