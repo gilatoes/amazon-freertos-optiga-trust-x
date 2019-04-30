@@ -65,6 +65,17 @@ typedef struct DIGITAL_IO
 /**********************************************************************************************************************
  * API IMPLEMENTATION
  *********************************************************************************************************************/
+//lint --e{714,715} suppress "This is implemented for overall completion of API"
+pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
+{
+    return PAL_STATUS_SUCCESS;
+}
+
+//lint --e{714,715} suppress "This is implemented for overall completion of API"
+pal_status_t pal_gpio_deinit(const pal_gpio_t * p_gpio_context)
+{
+    return PAL_STATUS_SUCCESS;
+}
 
 /**
 * Sets the gpio pin to high state
