@@ -187,6 +187,7 @@
 									<listOptionValue builtIn="false" value="MBEDTLS_ECDH_GEN_PUBLIC_ALT"/>
 									<listOptionValue builtIn="false" value="PAL_OS_HAS_EVENT_INIT"/>
 									<listOptionValue builtIn="false" value="MBEDTLS_ECDSA_GENKEY_ALT"/>
+									<listOptionValue builtIn="false" value="OPTIGA_COMMS_SHIELDED_CONNECTION"/>
 								</option>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.62519071" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 							</tool>
@@ -372,4 +373,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
