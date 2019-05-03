@@ -45,6 +45,10 @@
 #include "optiga/common/optiga_lib_common_internal.h"
 #include "optiga/pal/pal_ifx_i2c_config.h"
 
+//#ifndef OPTIGA_COMMS_SHIELDED_CONNECTION
+//#define OPTIGA_COMMS_SHIELDED_CONNECTION
+//#endif
+
 //cmd byte for OpenApplication command
 #define OPTIGA_CMD_OPEN_APPLICATION              (0x70 | 0x80)
 //cmd byte for CloseApplication command
@@ -441,12 +445,16 @@ _STATIC_H void optiga_cmd_execute(optiga_cmd_t * me,
                                   optiga_cmd_state_t start_state,
                                   void * input)
 {
-    me->p_input = input;
+	//printf(">optiga_cmd_execute()cmd_param=%x\r\n", cmd_param);
+
+	me->p_input = input;
     me->cmd_next_execution_state = start_state;
     me->cmd_hdlrs = cmd_hdlrs;
     me->chaining_ongoing = FALSE;
     me->cmd_param = cmd_param;
     optiga_cmd_execute_handler(me, OPTIGA_LIB_SUCCESS);
+
+    //printf("<optiga_cmd_execute()cmd_param=0x%x\r\n", cmd_param);
 }
 
 _STATIC_H void optiga_cmd_queue_scheduler(void * p_ctx);
@@ -787,6 +795,8 @@ _STATIC_H void optiga_cmd_execute_handler(void * p_ctx, optiga_lib_status_t even
     optiga_cmd_handler_t optiga_cmd_handler = me->cmd_hdlrs;
     p_optiga = me->p_optiga;
 
+    //printf(">optiga_cmd_execute_handler()\r\n");
+
     // in event of no success, release lock and exit
     if (OPTIGA_LIB_SUCCESS != event)
     {
@@ -1100,6 +1110,8 @@ _STATIC_H void optiga_cmd_execute_handler(void * p_ctx, optiga_lib_status_t even
             }
         }
     } while (FALSE == exit_loop);
+
+    //printf("<optiga_cmd_execute_handler()\r\n");
 }
 
 optiga_cmd_t * optiga_cmd_create(uint8_t optiga_instance_id, callback_handler_t handler, void * caller_context)

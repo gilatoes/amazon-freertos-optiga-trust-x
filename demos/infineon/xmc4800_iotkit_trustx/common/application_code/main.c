@@ -100,6 +100,8 @@ int main( void )
                             tskIDLE_PRIORITY,
                             mainLOGGING_MESSAGE_QUEUE_LENGTH );
 
+    configPRINTF( ( "main()...\r\n" ) );
+
     /* Start the scheduler.  Initialization that requires the OS to be running,
      * including the Wi-Fi initialization, is performed in the RTOS daemon task
      * startup hook. */
@@ -119,15 +121,18 @@ static void prvMiscInitialization( void )
 
 void vApplicationDaemonTaskStartupHook( void )
 {
-	//OPTIGA_TRUST_X_Init();
+	//configPRINTF( ( "Init Trust M...\r\n" ) );
 	OPTIGA_TRUST_M_Init();
-    
+
+#if 0//Disable Wifi connection
     /* Initialize the AWS Libraries system. */
     if ( SYSTEM_Init() == pdPASS )
     {
         prvWifiConnect();
 
     }
+#endif
+
 
 }
 /*-----------------------------------------------------------*/
@@ -307,6 +312,8 @@ void vApplicationIdleHook( void )
     static TickType_t xLastPrint = 0;
     TickType_t xTimeNow;
     const TickType_t xPrintFrequency = pdMS_TO_TICKS( 5000 );
+
+    //configPRINTF( ( "vApplicationIdleHook..\r\n" ) );
 
     xTimeNow = xTaskGetTickCount();
 

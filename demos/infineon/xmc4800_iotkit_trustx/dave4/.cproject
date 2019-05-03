@@ -47,6 +47,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/mbedtls/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/pkcs11}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/config_files}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;/${ProjName}/lib/third_party/trustm/examples/utilities&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.preprocessor.def.1397954566" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="XMC4800_F100x2048"/>
@@ -90,6 +91,7 @@
 								<option id="com.ifx.xmc4000.assembler.option.misc.mfloat.903306670" name="Floating point" superClass="com.ifx.xmc4000.assembler.option.misc.mfloat" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
 								<option id="com.ifx.xmc4000.assembler.option.include.paths.830735806" name="Include paths (-I)" superClass="com.ifx.xmc4000.assembler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;/${ProjName}/lib/third_party/trustm/examples/utilities&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.preprocessor.def.1935478892" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="XMC4800_F100x2048"/>
@@ -160,6 +162,7 @@
 								<option id="com.ifx.xmc4000.compiler.option.misc.mfloat.1517610586" name="Floating point" superClass="com.ifx.xmc4000.compiler.option.misc.mfloat" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
 								<option id="com.ifx.xmc4000.compiler.option.include.paths.898122737" name="Include paths (-I)" superClass="com.ifx.xmc4000.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/utilities}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/ecdsa_utils}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/authenticate_chip}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/optiga/include}&quot;"/>
@@ -187,7 +190,6 @@
 									<listOptionValue builtIn="false" value="MBEDTLS_ECDH_GEN_PUBLIC_ALT"/>
 									<listOptionValue builtIn="false" value="PAL_OS_HAS_EVENT_INIT"/>
 									<listOptionValue builtIn="false" value="MBEDTLS_ECDSA_GENKEY_ALT"/>
-									<listOptionValue builtIn="false" value="OPTIGA_COMMS_SHIELDED_CONNECTION"/>
 								</option>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.62519071" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
 							</tool>
@@ -221,6 +223,7 @@
 								<option id="com.ifx.xmc4000.assembler.option.misc.mfloat.323085761" name="Floating point" superClass="com.ifx.xmc4000.assembler.option.misc.mfloat" useByScannerDiscovery="false" value="org.eclipse.cdt.cross.arm.gnu.base.option.other.mfloat.softfp" valueType="enumerated"/>
 								<option id="com.ifx.xmc4000.assembler.option.include.paths.1531232147" name="Include paths (-I)" superClass="com.ifx.xmc4000.assembler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;/${ProjName}/lib/third_party/trustm/examples/utilities&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.assembler.option.preprocessor.def.1581827949" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.assembler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="XMC4800_F100x2048"/>
@@ -306,6 +309,7 @@
 						<tool id="com.ifx.xmc4000.appDebug.compiler.268429070.1767897344" name="ARM-GCC C Compiler" superClass="com.ifx.xmc4000.appDebug.compiler.268429070">
 							<option id="com.ifx.xmc4000.compiler.option.include.paths.2112746053" name="Include paths (-I)" superClass="com.ifx.xmc4000.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/utilities}&quot;"/>
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/ecdsa_utils}&quot;"/>
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/examples/authenticate_chip}&quot;"/>
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lib/third_party/trustm/optiga/include}&quot;"/>

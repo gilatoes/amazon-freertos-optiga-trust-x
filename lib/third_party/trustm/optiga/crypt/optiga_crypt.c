@@ -40,7 +40,7 @@
 #include "optiga/common/optiga_lib_common_internal.h"
 #include "optiga/pal/pal_memory_mgmt.h"
 
-#define OPTIGA_CRYPT_ECDSA_SIGN_ENABLED
+//#define OPTIGA_CRYPT_ECDSA_SIGN_ENABLED
 
 /// ECDSA FIPS 186-3 without hash
 #define OPTIGA_CRYPT_ECDSA_FIPS_186_3_WITHOUT_HASH                  (0x11)

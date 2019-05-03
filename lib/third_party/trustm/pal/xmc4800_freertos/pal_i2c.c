@@ -244,6 +244,8 @@ void i2c_master_arbitration_lost_callback(void)
 pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 {
 	uint16_t status = PAL_STATUS_FAILURE;
+
+	//printf(">pal_i2c_init()\n");
 	status = I2C_MASTER_Init(&i2c_master_0);
 	if (status == 0) {
 		status = PAL_STATUS_SUCCESS;
@@ -259,6 +261,8 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 
 	/* Create a queue for results. Not more than 2 interrupts one by one are expected*/
 	trustx_i2cresult_queue = xQueueCreate( 2, sizeof( i2c_result_t ) );
+
+	//printf("<pal_i2c_init()\n");
 
     return status;
 }

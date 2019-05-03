@@ -197,7 +197,7 @@ optiga_lib_status_t optiga_util_destroy(optiga_util_t * me);
  * main_xmc4500_sample.c
  */
 optiga_lib_status_t optiga_util_open_application(optiga_util_t * me,
-		 optiga_comms_t * perform_restore);
+		bool_t  perform_restore);
 
 /**
  *\brief Closes the application on OPTIGA and closes the communication with optiga.

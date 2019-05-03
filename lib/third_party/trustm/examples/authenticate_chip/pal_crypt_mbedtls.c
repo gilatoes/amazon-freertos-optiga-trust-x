@@ -268,7 +268,10 @@ optiga_lib_status_t  pal_crypt_verify_signature(const uint8_t* p_pubkey, uint16_
 optiga_lib_status_t pal_crypt_init(void)
 {
 	int32_t status  = (int32_t)CRYPTO_LIB_OK;
+	optiga_lib_status_t return_value = OPTIGA_CRYPT_ERROR;
 	optiga_crypt_t * me = NULL;
+
+	printf(">pal_crypt_init()\r\n");
 
 	mbedtls_entropy_init( &entropy );
 	uint8_t personalization[32];
@@ -280,7 +283,12 @@ optiga_lib_status_t pal_crypt_init(void)
         return status;
     }
 
-	optiga_crypt_random(me, OPTIGA_RNG_TYPE_DRNG, personalization, 32);
+    return_value = optiga_crypt_random(me, OPTIGA_RNG_TYPE_DRNG, personalization, 32);
+
+    if(return_value != OPTIGA_LIB_SUCCESS)
+    {
+    	printf("optiga_crypt_random failed: 0x%x\r\n", return_value);
+    }
 
 	mbedtls_ctr_drbg_init( &ctr_drbg );
 
@@ -292,6 +300,8 @@ optiga_lib_status_t pal_crypt_init(void)
 	{
 		status  = (int32_t)CRYPTO_LIB_NULL_PARAM;
 	}
+
+	printf("<pal_crypt_init()\r\n");
 
 	return status;
 }

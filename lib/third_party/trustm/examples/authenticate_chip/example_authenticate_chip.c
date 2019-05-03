@@ -338,6 +338,7 @@ optiga_lib_status_t example_authenticate_chip(void)
     	status = pal_crypt_init();
 		if(OPTIGA_LIB_SUCCESS != status)
 		{
+			printf("Failed pal_crypt_init()\r\n");
 			break;
 		}
 

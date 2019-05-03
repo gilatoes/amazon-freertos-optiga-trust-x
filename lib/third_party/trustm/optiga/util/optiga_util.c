@@ -39,6 +39,10 @@
 #include "optiga/common/optiga_lib_common_internal.h"
 #include "optiga/pal/pal_memory_mgmt.h"
 
+//#ifndef OPTIGA_COMMS_SHIELDED_CONNECTION
+//#define OPTIGA_COMMS_SHIELDED_CONNECTION
+//#endif
+
 extern void optiga_cmd_set_shielded_connection_option(optiga_cmd_t * me, uint8_t value,
                                                       uint8_t shielded_connection_option);
 
@@ -208,9 +212,10 @@ optiga_lib_status_t optiga_util_destroy(optiga_util_t * me)
 }
 
 optiga_lib_status_t optiga_util_open_application(optiga_util_t * me, 
-		optiga_comms_t * perform_restore)
+		bool_t  perform_restore)
 {
     optiga_lib_status_t return_value = OPTIGA_UTIL_ERROR;
+    //printf(">optiga_cmd_open_application()\n");
 
     do
     {
@@ -242,14 +247,17 @@ optiga_lib_status_t optiga_util_open_application(optiga_util_t * me,
         }
 #endif //OPTIGA_COMMS_SHIELDED_CONNECTION
 
-        return_value = optiga_cmd_open_application((optiga_cmd_t *)me->my_cmd, (uint8_t)perform_restore, NULL);
+        return_value = optiga_cmd_open_application(me->my_cmd, perform_restore, NULL);
         if (OPTIGA_LIB_SUCCESS != return_value)
         {
+        	printf("failed optiga_cmd_open_application\r\n");
             me->instance_state = OPTIGA_LIB_INSTANCE_FREE;
         }
 
     } while (FALSE);
     optiga_util_reset_protection_level(me);
+
+    //printf("<optiga_cmd_open_application()\n");
 
     return (return_value);
 }
