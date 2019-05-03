@@ -55,21 +55,6 @@
 mbedtls_entropy_context 					entropy;
 mbedtls_ctr_drbg_context 					ctr_drbg;
 
-
-/**
- * Callback when optiga_crypt_xxxx operation is completed asynchronously
- */
-static volatile optiga_lib_status_t optiga_lib_status;
-
-static void optiga_crypt_callback(void * context, optiga_lib_status_t return_status)
-{
-    optiga_lib_status = return_status;
-    if (NULL != context)
-    {
-        // callback to upper layer here
-    }
-}
-
 /**
  * \brief Verifies the ECC signature using the given public key.
  */
@@ -265,30 +250,27 @@ optiga_lib_status_t  pal_crypt_verify_signature(const uint8_t* p_pubkey, uint16_
     return status;
 }
 
-optiga_lib_status_t pal_crypt_init(void)
+optiga_lib_status_t pal_crypt_init(optiga_crypt_t * me)
 {
 	int32_t status  = (int32_t)CRYPTO_LIB_OK;
 	optiga_lib_status_t return_value = OPTIGA_CRYPT_ERROR;
-	optiga_crypt_t * me = NULL;
 
 	printf(">pal_crypt_init()\r\n");
+
+	printf("pal_crypt_init: instance_state=0x%x\r\n",me->instance_state);
 
 	mbedtls_entropy_init( &entropy );
 	uint8_t personalization[32];
 
-    me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
-    if (NULL == me)
-    {
-    	status  = (int32_t)CRYPTO_LIB_NULL_PARAM;
-        return status;
-    }
-
-    return_value = optiga_crypt_random(me, OPTIGA_RNG_TYPE_DRNG, personalization, 32);
+    return_value = optiga_crypt_random(me, OPTIGA_RNG_TYPE_TRNG, personalization, 32);
 
     if(return_value != OPTIGA_LIB_SUCCESS)
     {
-    	printf("optiga_crypt_random failed: 0x%x\r\n", return_value);
+    	printf("pal_crypt_init: optiga_crypt_random failed: 0x%x\r\n", return_value);
     }
+
+    //Must wait here?
+
 
 	mbedtls_ctr_drbg_init( &ctr_drbg );
 
@@ -298,6 +280,7 @@ optiga_lib_status_t pal_crypt_init(void)
 
 	if( status != 0 )
 	{
+		printf("pal_crypt_init: status=0x%x\r\n",status);
 		status  = (int32_t)CRYPTO_LIB_NULL_PARAM;
 	}
 

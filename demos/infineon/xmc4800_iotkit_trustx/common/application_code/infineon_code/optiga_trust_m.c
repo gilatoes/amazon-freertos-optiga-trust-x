@@ -44,7 +44,10 @@ static TimerHandle_t xTrustXInitTimer;
 SemaphoreHandle_t xTrustXSemaphoreHandle; /**< OPTIGA™ Trust X module semaphore. */
 const TickType_t xTrustXSemaphoreWaitTicks = pdMS_TO_TICKS( 60000 );
 
+extern optiga_lib_status_t trustm_OpenCrypto(void);
+extern optiga_lib_status_t trustm_CloseCrypto(void);
 extern optiga_lib_status_t  example_authenticate_chip(void);
+
 
 //uint16_t trustm_open_flag = 0;
 
@@ -129,7 +132,6 @@ void vTrustXInitCallback( TimerHandle_t xTimer )
 void vTrustXTaskCallbackHandler( void * pvParameters )
 {
 	optiga_lib_status_t status = OPTIGA_DEVICE_ERROR;
-	utrustm_UID_t UID;
 
 	if ( xSemaphoreTake(xTrustXSemaphoreHandle, xTrustXSemaphoreWaitTicks) == pdTRUE )
 	{
@@ -138,6 +140,8 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 	    	pal_os_event_init();
 	    }while(FALSE);
 
+#if 0
+	    utrustm_UID_t UID;
 	    optiga_lib_status_t return_status = trustm_Open();
 	    if (return_status != OPTIGA_LIB_SUCCESS)
 	    {
@@ -207,6 +211,21 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 				printf("====================================================================\n");
 
 				trustm_Close();
+	    }
+#endif
+
+
+	    optiga_lib_status_t return_status = trustm_OpenCrypto();
+	    if (return_status != OPTIGA_LIB_SUCCESS)
+	    {
+	    	printf("vTrustXTaskCallbackHandler: error opening Trust M crypto instance.");
+	    }
+	    else
+	    {
+	    	 example_authenticate_chip();
+
+	    	 trustm_CloseCrypto();
+
 	    }
 
 	    //status = example_authenticate_chip();

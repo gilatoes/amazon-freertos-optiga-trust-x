@@ -51,7 +51,7 @@ uint16_t trustm_open_flag = 0;
  * Callback when optiga_util_xxxx operation is completed asynchronously
  */
 
-void optiga_util_callback(void * context, optiga_lib_status_t return_status)
+static void optiga_util_callback(void * context, optiga_lib_status_t return_status)
 {
     optiga_lib_status = return_status;
 	//printf("optiga_util_callback: optiga_lib_status=0x%x\r\n",optiga_lib_status);

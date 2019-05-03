@@ -31,11 +31,18 @@
 * @{
 */
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+
 #include "optiga/optiga_crypt.h"
 #include "optiga/optiga_util.h"
 #include "optiga/common/optiga_lib_common.h"
 #include "pal_crypt.h"
 
+/*************************************************************************
+*  Global
+*************************************************************************/
 ///size of public key for NIST-P256
 #define LENGTH_PUB_KEY_NISTP256     0x41
 
@@ -151,18 +158,169 @@ uint8_t optiga_ca_certificate[]=
 };
 #endif
 
+static optiga_util_t * me_util;
+static optiga_crypt_t * me_crypt;
+uint16_t trustm_open_crypto_flag = 0;
+
 /**
  * Callback when optiga_crypt_xxxx operation is completed asynchronously
  */
-static volatile optiga_lib_status_t optiga_lib_status;
+static volatile optiga_lib_status_t optiga_lib_util_status;
+static volatile optiga_lib_status_t optiga_lib_crypt_status;
 
-static void optiga_crypt_callback(void * context, optiga_lib_status_t return_status)
+static void optiga_util_callback(void * context, optiga_lib_status_t return_status)
 {
-    optiga_lib_status = return_status;
+	optiga_lib_util_status = return_status;
     if (NULL != context)
     {
         // callback to upper layer here
     }
+}
+static void optiga_crypt_callback(void * context, optiga_lib_status_t return_status)
+{
+	optiga_lib_crypt_status = return_status;
+    if (NULL != context)
+    {
+        // callback to upper layer here
+    }
+}
+
+/**********************************************************************
+* trustm_Open()
+**********************************************************************/
+optiga_lib_status_t trustm_OpenCrypto(void)
+{
+	uint16_t i;
+    optiga_lib_status_t return_status;
+    const TickType_t xDelay = 50 / portTICK_PERIOD_MS;
+
+    //printf(">trustm_OpenCrypto()\r\n");
+    trustm_open_crypto_flag = 0;
+    do
+    {
+        //Create an instance of optiga_util to open the application on OPTIGA.
+        me_util = optiga_util_create(0, optiga_util_callback, NULL);
+        if (NULL == me_util)
+        {
+            printf("trustm_OpenCrypto: Failed to create Trust M util instance\r\n");
+            break;
+        }
+		printf("trustm_OpenCrypto: Trust M util instance created Ok.\r\n");
+		printf("trustm_OpenCrypto: util instance_state=0x%x\r\n",me_util->instance_state);
+
+        /**
+         * Open the application on OPTIGA which is a precondition to perform any other operations
+         * using optiga_util_open_application
+         */
+        optiga_lib_util_status = OPTIGA_LIB_BUSY;
+        return_status = optiga_util_open_application(me_util, 0);
+
+        if (OPTIGA_LIB_SUCCESS != return_status)
+        {
+        	printf("trustm_OpenCrypto: Failed to open Trust M application\r\n");
+            break;
+        }
+
+
+        //printf("waiting (max count: 50)");
+        //Wait until the optiga_util_open_application is completed
+		i=0;
+        while (optiga_lib_util_status == OPTIGA_LIB_BUSY)
+		{
+			//printf(".");
+			i++;
+			vTaskDelay(xDelay);
+			if (i == 50)
+				break;
+		}
+        //printf("\n");
+		//printf("count : %d \n",i);
+
+        if (OPTIGA_LIB_SUCCESS != optiga_lib_util_status)
+        {
+			printf("trustm_OpenCrypto: Failed to open Trust M application. optiga_lib_status=0x%x\r\n",optiga_lib_util_status);
+			return_status = optiga_lib_util_status;
+            break;
+        }
+
+        trustm_open_crypto_flag = 1;
+        printf("trustm_OpenCrypto: instance_state=0x%x\r\n",me_util->instance_state);
+        printf("trustm_OpenCrypto： Open Trust M application Ok.\n");
+
+        me_crypt = optiga_crypt_create(0, optiga_crypt_callback, NULL);
+	   if (NULL == me_crypt)
+	   {
+		   printf("trustm_OpenCrypto: Failed to create Trust M crypt instance\r\n");
+		   break;
+	   }
+       		printf("trustm_OpenCrypto: Trust M crypt instance created Ok.\r\n");
+       		printf("trustm_OpenCrypto: crypt instance_state=0x%x\r\n",me_crypt->instance_state);
+
+
+
+    }while(FALSE);
+
+	//printf("<trustm_OpenCrypto()\r\n");
+	return return_status;
+}
+
+/**********************************************************************
+* trustX_CloseCrypto()
+**********************************************************************/
+optiga_lib_status_t trustm_CloseCrypto(void)
+{
+    optiga_lib_status_t return_status;
+
+    //printf(">trustm_CloseCrypto()");
+
+	do{
+		if (trustm_open_crypto_flag != 1)
+		{
+			printf("trustm_CloseCrypto: Trust M is not open\r\n");
+			break;
+		}
+
+        optiga_lib_util_status = OPTIGA_LIB_BUSY;
+        //++ty++ OPTIGA_COMMS_PROTECTION_MANAGE_CONTEXT(me_util, OPTIGA_COMMS_SESSION_CONTEXT_NONE);
+        return_status = optiga_util_close_application(me_util, 0);
+
+        if (OPTIGA_LIB_SUCCESS != return_status)
+        {
+        	printf("trustm_CloseCrypto(): Failed to close Trust M.\r\n");
+            break;
+        }
+
+        while (optiga_lib_util_status == OPTIGA_LIB_BUSY)
+        {
+            //Wait until the optiga_util_close_application is completed
+			//printf("Waiting : optiga_util_close_application \n");
+			//printf(".");
+        }
+
+        if (OPTIGA_LIB_SUCCESS != optiga_lib_util_status)
+        {
+            //optiga util close application failed
+        	printf("trustm_CloseCrypto: Fail to close Trun M application.\r\n");
+			return_status = optiga_lib_util_status;
+            break;
+        }
+
+        trustm_open_crypto_flag = 0;
+		printf("trustm_CloseCrypto: Trust M closed Ok.\r\n");
+
+	}while(FALSE);
+
+    // destroy util and crypt instances
+    if (me_util != NULL)
+		optiga_util_destroy(me_util);
+
+#ifdef WORKAROUND
+	pal_os_event_disarm();
+#endif
+
+	//printf("trustm_Close(): TrustM Closed.\n");
+	//printf("<trustm_Close()");
+	return return_status;
 }
 /**
 *
@@ -193,12 +351,6 @@ static optiga_lib_status_t __get_chip_cert(uint16_t cert_oid,
 		{
 			break;
 		}
-
-	    me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
-	    if (NULL == me)
-	    {
-	        break;
-	    }
 
 		//Get end entity device certificate
 		status = optiga_util_read_data((optiga_util_t *)me, cert_oid, 0, p_tmp_cert_pointer, p_cert_size);
@@ -271,12 +423,6 @@ static optiga_lib_status_t __authenticate_chip(uint8_t* p_pubkey, uint16_t pubke
     do
     {
 
-	    me = optiga_crypt_create(0, optiga_crypt_callback, NULL);
-	    if (NULL == me)
-	    {
-	        break;
-	    }
-
         //Get PwChallengeLen byte random stream
         status = pal_crypt_random(LENGTH_CHALLENGE, random);
         if(OPTIGA_LIB_SUCCESS != status)
@@ -316,8 +462,7 @@ static optiga_lib_status_t __authenticate_chip(uint8_t* p_pubkey, uint16_t pubke
 }
 
 /**
- * The below example demonstrates the authetnication of the security chip
- * using third party crypto library.
+ * Example demonstrates the authentication of the Trust M using MbedTLS.
  *
  * Example for #example_authenticate_chip
  *
@@ -332,13 +477,25 @@ optiga_lib_status_t example_authenticate_chip(void)
 	uint16_t chip_cert_oid = 0xE0E0;
 	uint16_t chip_privkey_oid = 0xE0F1;
 
+	printf(">example_authenticate_chip()\r\n");
+
+
     do
     {
+    	if(me_crypt == NULL)
+    	{
+    		printf("example_authenticate_chip: Invalid Trust M crypt instance.\r\n");
+    		break;
+    	}
+
+    	printf("example_authenticate_chip: instance_state=0x%x\r\n",me_crypt->instance_state);
+
     	// Initialise pal crypto module
-    	status = pal_crypt_init();
+    	status = pal_crypt_init(me_crypt);
+
 		if(OPTIGA_LIB_SUCCESS != status)
 		{
-			printf("Failed pal_crypt_init()\r\n");
+			printf("example_authenticate_chip: Failed to initialize crypto module.\r\n");
 			break;
 		}
 
@@ -371,6 +528,8 @@ optiga_lib_status_t example_authenticate_chip(void)
 		}
 
     } while(FALSE);
+
+    printf("<example_authenticate_chip()\r\n");
 
     return status;
 }

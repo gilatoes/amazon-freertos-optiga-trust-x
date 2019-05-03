@@ -170,7 +170,7 @@ optiga_lib_status_t  pal_crypt_verify_signature(const uint8_t* p_pubkey, uint16_
 *\retval  #CRYPTO_LIB_OK
 *\retval  #CRYPTO_LIB_NULL_PARAM
 */
-optiga_lib_status_t pal_crypt_init(void);
+optiga_lib_status_t pal_crypt_init(optiga_crypt_t * me);
 
 /**
 * Generates random data bytes of requested length. <br>
