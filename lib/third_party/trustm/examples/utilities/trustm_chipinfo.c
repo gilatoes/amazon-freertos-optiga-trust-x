@@ -123,7 +123,7 @@ optiga_lib_status_t trustm_Open(void)
 }
 
 /**********************************************************************
-* trustX_Close()
+* trustm_Close()
 **********************************************************************/
 optiga_lib_status_t trustm_Close(void)
 {

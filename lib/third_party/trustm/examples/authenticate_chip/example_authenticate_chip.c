@@ -61,7 +61,7 @@
 // Length of SH256
 #define LENGTH_SHA256			32
 
-///size of end entity certificate of OPTIGA™ Trust X
+///size of end entity certificate of OPTIGA™ Trust M
 #define LENGTH_OPTIGA_CERT          512
 
 #define MODULE_ENABLE_ONE_WAY_AUTH
@@ -306,7 +306,7 @@ optiga_lib_status_t trustm_OpenCrypto(void)
 }
 
 /**********************************************************************
-* trustX_CloseCrypto()
+* trustm_CloseCrypto()
 **********************************************************************/
 optiga_lib_status_t trustm_CloseCrypto(void)
 {
@@ -509,7 +509,7 @@ static optiga_lib_status_t __authenticate_chip(uint8_t* p_pubkey, uint16_t pubke
 
         printf("__authenticate_chip(): Sign with random number\r\n");
         optiga_lib_crypt_status = OPTIGA_LIB_BUSY;
-		//Sign random with OPTIGA™ Trust X
+		//Sign random with OPTIGA™ Trust M
         status = optiga_crypt_ecdsa_sign(me_crypt, digest, LENGTH_SHA256,
 									     privkey_oid,
 										 signature, &signature_size);

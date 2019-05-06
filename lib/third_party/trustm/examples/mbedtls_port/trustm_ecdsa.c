@@ -189,7 +189,7 @@ int mbedtls_ecdsa_genkey( mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
  
 	mbedtls_ecp_group_load( &ctx->grp, gid );
  
-    //checking group against the supported curves of Optiga Trust X
+    //checking group against the supported curves of OPTIGA Trust M
     if ( ( grp->id != MBEDTLS_ECP_DP_SECP256R1 ) &&
 		 ( grp->id != MBEDTLS_ECP_DP_SECP384R1 ) )
 	{

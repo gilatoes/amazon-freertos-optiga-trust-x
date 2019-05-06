@@ -16,8 +16,8 @@
 /* Key provisioning includes. */
 #include "aws_dev_mode_key_provisioning.h"
 
-/* OPTIGA Trust X defines. */
-#define mainTrustX_TASK_STACK_SIZE     		( configMINIMAL_STACK_SIZE * 8 )
+/* OPTIGA Trust M defines. */
+#define mainTrustM_TASK_STACK_SIZE     		( configMINIMAL_STACK_SIZE * 8 )
 
 char CLIENT_CERTIFICATE_PEM[1124];
 uint32_t CLIENT_CERTIFICATE_LENGTH;
@@ -38,11 +38,9 @@ const char CLIENT_PRIVATE_KEY_PEM[] =
  */
 const uint32_t CLIENT_PRIVATE_KEY_LENGTH = sizeof( CLIENT_PRIVATE_KEY_PEM );
 
-
-//optiga_comms_t optiga_comms = {(void*)&ifx_i2c_context_0,NULL,NULL, OPTIGA_COMMS_SUCCESS};
-static TimerHandle_t xTrustXInitTimer;
-SemaphoreHandle_t xTrustXSemaphoreHandle; /**< OPTIGA™ Trust X module semaphore. */
-const TickType_t xTrustXSemaphoreWaitTicks = pdMS_TO_TICKS( 60000 );
+static TimerHandle_t xTrustMInitTimer;
+SemaphoreHandle_t xTrustMSemaphoreHandle; /**< OPTIGA™ Trust M module semaphore. */
+const TickType_t xTrustMSemaphoreWaitTicks = pdMS_TO_TICKS( 60000 );
 
 extern optiga_lib_status_t trustm_OpenCrypto(void);
 extern optiga_lib_status_t trustm_CloseCrypto(void);
@@ -109,10 +107,10 @@ void trustm_open_app()
         me_example = optiga_util_create(0, optiga_example_util_callback, NULL);
         if (NULL == me_example)
         {
-            printf("vTrustXTaskCallbackHandler: Failed to create Trust M instance\r\n");
+            printf("vTrustMTaskCallbackHandler: Failed to create Trust M instance\r\n");
             break;
         }
-		printf("vTrustXTaskCallbackHandler: Trust M instance created Ok.\r\n");
+		printf("vTrustMTaskCallbackHandler: Trust M instance created Ok.\r\n");
 
         /**
          * Open the application on OPTIGA which is a precondition to perform any other operations
@@ -123,7 +121,7 @@ void trustm_open_app()
 
         if (OPTIGA_LIB_SUCCESS != return_status)
         {
-        	printf("vTrustXTaskCallbackHandler: Failed to open Trust M application\r\n");
+        	printf("vTrustMTaskCallbackHandler: Failed to open Trust M application\r\n");
             break;
         }
 
@@ -144,12 +142,12 @@ void trustm_open_app()
 
         if (OPTIGA_LIB_SUCCESS != optiga_example_lib_status)
         {
-			printf("vTrustXTaskCallbackHandler: Failed to open Trust M application. optiga_example_lib_status=0x%x\r\n", optiga_example_lib_status);
+			printf("vTrustMTaskCallbackHandler: Failed to open Trust M application. optiga_example_lib_status=0x%x\r\n", optiga_example_lib_status);
 			return_status = optiga_example_lib_status;
             break;
         }
 
-        printf("vTrustXTaskCallbackHandler： Open Trust M application Ok.\n");
+        printf("vTrustMTaskCallbackHandler： Open Trust M application Ok.\n");
     }while(FALSE);
 }
 
@@ -163,7 +161,7 @@ void trustm_close_app()
 
 		if (OPTIGA_LIB_SUCCESS != return_status)
 		{
-			printf("vTrustXTaskCallbackHandler: Failed to close Trust M.\r\n");
+			printf("vTrustMTaskCallbackHandler: Failed to close Trust M.\r\n");
 			break;
 		}
 
@@ -173,12 +171,12 @@ void trustm_close_app()
 		if (OPTIGA_LIB_SUCCESS != optiga_example_lib_status)
 		{
 			//optiga util close application failed
-			printf("vTrustXTaskCallbackHandler: Fail to close Trust M application.\r\n");
+			printf("vTrustMTaskCallbackHandler: Fail to close Trust M application.\r\n");
 			return_status = optiga_example_lib_status;
 			break;
 		}
 
-		printf("vTrustXTaskCallbackHandler: Trust M closed Ok.\r\n");
+		printf("vTrustMTaskCallbackHandler: Trust M closed Ok.\r\n");
 
 	}while(FALSE);
 
@@ -187,16 +185,16 @@ void trustm_close_app()
 		optiga_util_destroy(me_example);
 }
 
-void vTrustXInitCallback( TimerHandle_t xTimer )
+void vTrustMInitCallback( TimerHandle_t xTimer )
 {
-	xSemaphoreGive(xTrustXSemaphoreHandle);
+	xSemaphoreGive(xTrustMSemaphoreHandle);
 }
 
-void vTrustXTaskCallbackHandler( void * pvParameters )
+void vTrustMTaskCallbackHandler( void * pvParameters )
 {
 	optiga_lib_status_t status = OPTIGA_DEVICE_ERROR;
 
-	if ( xSemaphoreTake(xTrustXSemaphoreHandle, xTrustXSemaphoreWaitTicks) == pdTRUE )
+	if ( xSemaphoreTake(xTrustMSemaphoreHandle, xTrustMSemaphoreWaitTicks) == pdTRUE )
 	{
 	    do
 	    {
@@ -208,7 +206,7 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 	    optiga_lib_status_t return_status = trustm_Open();
 	    if (return_status != OPTIGA_LIB_SUCCESS)
 	    {
-	    	printf("vTrustXTaskCallbackHandler: error opening Trust M.");
+	    	printf("vTrustMTaskCallbackHandler: error opening Trust M.");
 	    }
 	    else
 	    {
@@ -216,7 +214,7 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 
 			if (return_status != OPTIGA_LIB_SUCCESS)
 			{
-				printf("vTrustXTaskCallbackHandler: readUID [0xE0C2] failed\n");
+				printf("vTrustMTaskCallbackHandler: readUID [0xE0C2] failed\n");
 			}
 			else
 			{
@@ -281,7 +279,7 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 	    optiga_lib_status_t return_status = trustm_OpenCrypto();
 	    if (return_status != OPTIGA_LIB_SUCCESS)
 	    {
-	    	printf("vTrustXTaskCallbackHandler: error opening Trust M crypto instance.");
+	    	printf("vTrustMTaskCallbackHandler: error opening Trust M crypto instance.");
 	    }
 	    else
 	    {
@@ -291,7 +289,7 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 #endif
 
 	    trustm_open_app();
-	    printf("vTrustXTaskCallbackHandler: Start Examples test...\r\n");
+	    printf("vTrustMTaskCallbackHandler: Start Examples test...\r\n");
 
 	    /*
 	    example_optiga_crypt_ecc_generate_keypair();
@@ -313,7 +311,7 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 	    example_optiga_crypt_rsa_encrypt_session();
 	    example_optiga_crypt_rsa_decrypt_and_export();
 
-	    printf("vTrustXTaskCallbackHandler: Examples completed.\r\n");
+	    printf("vTrustMTaskCallbackHandler: Examples completed.\r\n");
 		trustm_close_app();
 
 
@@ -336,22 +334,22 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 void OPTIGA_TRUST_M_Init(void)
 {
 	/* Create the handler for the callbacks. */
-	xTaskCreate( vTrustXTaskCallbackHandler,       /* Function that implements the task. */
+	xTaskCreate( vTrustMTaskCallbackHandler,       /* Function that implements the task. */
 				"TrstXHndlr",          /* Text name for the task. */
 				configMINIMAL_STACK_SIZE*8,      /* Stack size in words, not bytes. */
 				NULL,    /* Parameter passed into the task. */
 				tskIDLE_PRIORITY,/* Priority at which the task is created. */
 				NULL );      /* Used to pass out the created task's handle. */
 
-    xTrustXSemaphoreHandle = xSemaphoreCreateBinary();
+    xTrustMSemaphoreHandle = xSemaphoreCreateBinary();
 
-	xTrustXInitTimer = xTimerCreate("TrustX_init_timer",        /* Just a text name, not used by the kernel. */
+	xTrustMInitTimer = xTimerCreate("TrustM_init_timer",        /* Just a text name, not used by the kernel. */
 									pdMS_TO_TICKS(1),    /* The timer period in ticks. */
 									pdFALSE,         /* The timers will auto-reload themselves when they expire. */
 									( void * )NULL,   /* Assign each timer a unique id equal to its array index. */
-									vTrustXInitCallback  /* Each timer calls the same callback when it expires. */
+									vTrustMInitCallback  /* Each timer calls the same callback when it expires. */
 									);
-	if( xTrustXInitTimer == NULL )
+	if( xTrustMInitTimer == NULL )
 	{
 		// The timer was not created.
 	}
@@ -360,7 +358,7 @@ void OPTIGA_TRUST_M_Init(void)
 		// Start the timer.  No block time is specified, and even if one was
 		// it would be ignored because the scheduler has not yet been
 		// started.
-		if( xTimerStart( xTrustXInitTimer, 0 ) != pdPASS )
+		if( xTimerStart( xTrustMInitTimer, 0 ) != pdPASS )
 		{
 		    // The timer could not be set into the Active state.
 		}

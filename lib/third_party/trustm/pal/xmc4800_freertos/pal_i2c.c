@@ -61,8 +61,8 @@ static volatile uint32_t g_entry_count = 0;
 /* Pointer to the current pal i2c context*/
 static pal_i2c_t * gp_pal_i2c_current_ctx;
 
-/**< OPTIGA™ Trust X I2C module queue. */
-QueueHandle_t trustx_i2cresult_queue;
+/**< OPTIGA™ Trust M I2C module queue. */
+QueueHandle_t trustm_i2cresult_queue;
 
 typedef struct i2c_result {
 	/// Pointer to store upper layer callback context (For example: Ifx i2c context)
@@ -137,7 +137,7 @@ void i2c_master_end_of_transmit_callback(void)
      * You cann't call callback from the timer callback, this might lead to a corruption
      * Use queues instead to activate corresponding handler
      * */
-	xQueueSendFromISR( trustx_i2cresult_queue, ( void * ) &i2_result, &xHigherPriorityTaskWoken );
+	xQueueSendFromISR( trustm_i2cresult_queue, ( void * ) &i2_result, &xHigherPriorityTaskWoken );
 }
 
 
@@ -154,7 +154,7 @@ void i2c_master_end_of_receive_callback(void)
      * You cann't call callback from the timer callback, this might lead to a corruption
      * Use queues instead to activate corresponding handler
      * */
-	xQueueSendFromISR( trustx_i2cresult_queue, ( void * ) &i2_result, &xHigherPriorityTaskWoken );
+	xQueueSendFromISR( trustm_i2cresult_queue, ( void * ) &i2_result, &xHigherPriorityTaskWoken );
 }
 
 // I2C error callback function
@@ -186,7 +186,7 @@ void i2c_master_error_detected_callback(void)
      * You cann't call callback from the timer callback, this might lead to a corruption
      * Use queues instead to activate corresponding handler
      * */
-	xQueueSendFromISR( trustx_i2cresult_queue, ( void * ) &i2_result, &xHigherPriorityTaskWoken );
+	xQueueSendFromISR( trustm_i2cresult_queue, ( void * ) &i2_result, &xHigherPriorityTaskWoken );
 }
 
 void i2c_result_handler( void * pvParameters )
@@ -194,7 +194,7 @@ void i2c_result_handler( void * pvParameters )
 	i2c_result_t i2_result;
 
 	do {
-		if( xQueueReceive( trustx_i2cresult_queue, &( i2_result ), ( TickType_t ) portMAX_DELAY ) )
+		if( xQueueReceive( trustm_i2cresult_queue, &( i2_result ), ( TickType_t ) portMAX_DELAY ) )
 		{
 			invoke_upper_layer_callback(i2_result.i2c_ctx, i2_result.i2c_result);
 		}
@@ -260,7 +260,7 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 				NULL );      /* Used to pass out the created task's handle. */
 
 	/* Create a queue for results. Not more than 2 interrupts one by one are expected*/
-	trustx_i2cresult_queue = xQueueCreate( 2, sizeof( i2c_result_t ) );
+	trustm_i2cresult_queue = xQueueCreate( 2, sizeof( i2c_result_t ) );
 
 	//printf("<pal_i2c_init()\n");
 

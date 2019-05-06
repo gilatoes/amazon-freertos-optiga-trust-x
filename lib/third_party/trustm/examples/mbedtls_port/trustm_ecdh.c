@@ -65,7 +65,7 @@ int mbedtls_ecdh_gen_public(mbedtls_ecp_group *grp, mbedtls_mpi *d,
 	optiga_key_id_t optiga_key_id = 0xE0F3;
 	optiga_crypt_t * me = NULL;
 
-	//checking group against the supported curves of Optiga Trust X
+	//checking group against the supported curves of OPTIGA Trust M
 	if ((grp->id != MBEDTLS_ECP_DP_SECP256R1)
 			&& (grp->id != MBEDTLS_ECP_DP_SECP384R1)) {
 		return 1;
@@ -118,7 +118,7 @@ int mbedtls_ecdh_compute_shared(mbedtls_ecp_group *grp, mbedtls_mpi *z,
 	optiga_crypt_t * me = NULL;
 
 	//Step1: Prepare the public key material as expected by security chip
-	//checking gid against the supported curves of OPTIGA Trust X
+	//checking gid against the supported curves of OPTIGA Trust M
 	if( (grp->id == MBEDTLS_ECP_DP_SECP256R1) || (grp->id == MBEDTLS_ECP_DP_SECP384R1))
 	{
 		grp->id == MBEDTLS_ECP_DP_SECP256R1 ? (publickey.key_type = OPTIGA_ECC_CURVE_NIST_P_256)
@@ -162,7 +162,7 @@ int mbedtls_ecdh_compute_shared(mbedtls_ecp_group *grp, mbedtls_mpi *z,
 	}
 	else
 	{
-		//error state set indicates unexpected gid to OPTIGA Trust X
+		//error state set indicates unexpected gid to OPTIGA Trust M
 		status = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
 	}
 
