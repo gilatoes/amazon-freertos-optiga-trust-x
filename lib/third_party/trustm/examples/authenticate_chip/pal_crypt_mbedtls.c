@@ -55,6 +55,98 @@
 mbedtls_entropy_context 					entropy;
 mbedtls_ctr_drbg_context 					ctr_drbg;
 
+
+/*-----------------------------------------------------------*/
+/*--------- mbedTLS threading functions for FreeRTOS --------*/
+/*--------------- See MBEDTLS_THREADING_ALT -----------------*/
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Implementation of mbedtls_mutex_init for thread-safety.
+ *
+ */
+void freertos_mbedtls_mutex_init( mbedtls_threading_mutex_t * mutex )
+{
+    if( mutex->is_valid == 0 )
+    {
+        mutex->mutex = xSemaphoreCreateMutex();
+
+        if( mutex->mutex != NULL )
+        {
+            mutex->is_valid = 1;
+        }
+        else
+        {
+            //PKCS11_PRINT( ( "Failed to initialize mbedTLS mutex.\r\n" ) );
+        }
+    }
+}
+
+/**
+ * @brief Implementation of mbedtls_mutex_free for thread-safety.
+ *
+ */
+void freertos_mbedtls_mutex_free( mbedtls_threading_mutex_t * mutex )
+{
+    if( mutex->is_valid == 1 )
+    {
+        vSemaphoreDelete( mutex->mutex );
+        mutex->is_valid = 0;
+    }
+}
+
+/**
+ * @brief Implementation of mbedtls_mutex_lock for thread-safety.
+ *
+ * @return 0 if successful, MBEDTLS_ERR_THREADING_MUTEX_ERROR if timeout,
+ * MBEDTLS_ERR_THREADING_BAD_INPUT_DATA if the mutex is not valid.
+ */
+int freertos_mbedtls_mutex_lock( mbedtls_threading_mutex_t * mutex )
+{
+    int ret = MBEDTLS_ERR_THREADING_BAD_INPUT_DATA;
+
+    if( mutex->is_valid == 1 )
+    {
+        if( xSemaphoreTake( mutex->mutex, portMAX_DELAY ) )
+        {
+            ret = 0;
+        }
+        else
+        {
+            ret = MBEDTLS_ERR_THREADING_MUTEX_ERROR;
+            //PKCS11_PRINT( ( "Failed to obtain mbedTLS mutex.\r\n" ) );
+        }
+    }
+
+    return ret;
+}
+
+/**
+ * @brief Implementation of mbedtls_mutex_unlock for thread-safety.
+ *
+ * @return 0 if successful, MBEDTLS_ERR_THREADING_MUTEX_ERROR if timeout,
+ * MBEDTLS_ERR_THREADING_BAD_INPUT_DATA if the mutex is not valid.
+ */
+int freertos_mbedtls_mutex_unlock( mbedtls_threading_mutex_t * mutex )
+{
+    int ret = MBEDTLS_ERR_THREADING_BAD_INPUT_DATA;
+
+    if( mutex->is_valid == 1 )
+    {
+        if( xSemaphoreGive( mutex->mutex ) )
+        {
+            ret = 0;
+        }
+        else
+        {
+            ret = MBEDTLS_ERR_THREADING_MUTEX_ERROR;
+            //PKCS11_PRINT( ( "Failed to unlock mbedTLS mutex.\r\n" ) );
+        }
+    }
+
+    return ret;
+}
+
 /**
  * \brief Verifies the ECC signature using the given public key.
  */
@@ -250,17 +342,30 @@ optiga_lib_status_t  pal_crypt_verify_signature(const uint8_t* p_pubkey, uint16_
     return status;
 }
 
+extern optiga_lib_status_t optiga_lib_crypt_status;
+
 optiga_lib_status_t pal_crypt_init(optiga_crypt_t * me)
 {
 	int32_t status  = (int32_t)CRYPTO_LIB_OK;
 	optiga_lib_status_t return_value = OPTIGA_CRYPT_ERROR;
 
-	printf(">pal_crypt_init()\r\n");
+	//printf(">pal_crypt_init()\r\n");
 
-	printf("pal_crypt_init: instance_state=0x%x\r\n",me->instance_state);
+	//printf("pal_crypt_init: instance_state=0x%x\r\n",me->instance_state);
+
+	 /* Ensure that the FreeRTOS heap is used. */
+	 //CRYPTO_ConfigureHeap();
+
+    /* Configure mbedtls to use FreeRTOS mutexes. */
+    mbedtls_threading_set_alt( freertos_mbedtls_mutex_init,
+    		freertos_mbedtls_mutex_free,
+			freertos_mbedtls_mutex_lock,
+			freertos_mbedtls_mutex_unlock );
 
 	mbedtls_entropy_init( &entropy );
 	uint8_t personalization[32];
+
+	optiga_lib_crypt_status = OPTIGA_LIB_BUSY;
 
     return_value = optiga_crypt_random(me, OPTIGA_RNG_TYPE_TRNG, personalization, 32);
 
@@ -270,9 +375,48 @@ optiga_lib_status_t pal_crypt_init(optiga_crypt_t * me)
     }
 
     //Must wait here?
+    while (OPTIGA_LIB_BUSY == optiga_lib_crypt_status)
+    {
+        //Wait until the optiga_crypt_random operation is completed
+    }
 
+    //printf("pal_crypt_init(optiga_lib_crypt_status): 0x%x\r\n", optiga_lib_crypt_status);
+
+    if (OPTIGA_LIB_SUCCESS != optiga_lib_crypt_status)
+    {
+    	printf("pal_crypt_init: optiga_crypt_random failed: 0x%x\r\n", return_value);
+        if (me)
+        {
+            //Destroy the instance after the completion of usecase if not required.
+        	return_value = optiga_crypt_destroy(me);
+        }
+    }
+
+#if 0
+    printf("pal_crypt_init: Random number:\r\n");
+
+    for(int i=0;i<32;)
+    {
+		printf("%.2X %.2X %.2X %.2X %.2X %.2X %.2X %.2X\r\n",personalization[i], personalization[i+1],personalization[i+2],personalization[i+3],
+				                                             personalization[i+4], personalization[i+5],personalization[i+6],personalization[i+7]
+				);
+		i+=8;
+    }
+#endif
 
 	mbedtls_ctr_drbg_init( &ctr_drbg );
+
+#if 0
+	int x=0;
+
+	 if( ( x = mbedtls_mutex_lock( (mbedtls_entropy_context *)&ctr_drbg.mutex ) ) != 0 )
+	 {
+		 //printf("pal_crypt_init: ret_val=0x%x\r\n", ret_val);
+		 printf("%s%x\n", x<0?"-0x":"", x<0?-(unsigned)x:x, "\r\n");
+		 //printf("pal_crypt_init: ret_val=%d\r\n", ret_val);
+
+	 }
+#endif
 
 	status = mbedtls_ctr_drbg_seed( &ctr_drbg , mbedtls_entropy_func, &entropy,
 	                     (const unsigned char *) personalization,
@@ -280,11 +424,15 @@ optiga_lib_status_t pal_crypt_init(optiga_crypt_t * me)
 
 	if( status != 0 )
 	{
-		printf("pal_crypt_init: status=0x%x\r\n",status);
+		int x = status;
+		//printf("pal_crypt_init: status=0x%x\r\n",status);
+		//printf("pal_crypt_init: status=%d\r\n");
+		printf("%s%x\n", x<0?"-0x":"", x<0?-(unsigned)x:x);
+		printf("\r\n");
 		status  = (int32_t)CRYPTO_LIB_NULL_PARAM;
 	}
 
-	printf("<pal_crypt_init()\r\n");
+	//printf("<pal_crypt_init()\r\n");
 
 	return status;
 }

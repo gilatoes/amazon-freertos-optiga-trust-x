@@ -339,7 +339,7 @@ _STATIC_H optiga_lib_status_t optiga_crypt_get_random(optiga_crypt_t * me,
     optiga_lib_status_t return_value = OPTIGA_CRYPT_ERROR;
     optiga_get_random_params_t * p_params;
 
-    printf(">optiga_crypt_get_random()\r\n");
+    //printf(">optiga_crypt_get_random()\r\n");
 
     do
     {
@@ -371,7 +371,7 @@ _STATIC_H optiga_lib_status_t optiga_crypt_get_random(optiga_crypt_t * me,
     } while (FALSE);
     optiga_crypt_reset_protection_level(me);
 
-    printf("<optiga_crypt_get_random()\r\n");
+    //printf("<optiga_crypt_get_random()\r\n");
 
     return (return_value);
 }
@@ -473,7 +473,7 @@ optiga_lib_status_t optiga_crypt_random(optiga_crypt_t * me,
 {
     optiga_lib_status_t return_value = OPTIGA_CRYPT_ERROR;
 
-    printf(">optiga_crypt_random()\r\n)");
+    //printf(">optiga_crypt_random()\r\n)");
 
     do
     {
@@ -485,7 +485,7 @@ optiga_lib_status_t optiga_crypt_random(optiga_crypt_t * me,
         }
 #endif
 
-        printf("optiga_crypt_random: instance_state=0x%x\r\n",me->instance_state);
+        //printf("optiga_crypt_random: instance_state=0x%x\r\n",me->instance_state);
         return_value = optiga_crypt_get_random(me,
                                                (uint8_t)rng_type,
                                                random_data,
@@ -494,7 +494,7 @@ optiga_lib_status_t optiga_crypt_random(optiga_crypt_t * me,
                                                0x00);
     } while (FALSE);
 
-    printf("<optiga_crypt_random()\r\n)");
+    //printf("<optiga_crypt_random()\r\n)");
 
     return (return_value);
 }

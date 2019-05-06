@@ -42,7 +42,7 @@
 *  Global
 *************************************************************************/
 static volatile optiga_lib_status_t optiga_lib_status;
-optiga_util_t * me;
+static optiga_util_t * me;
 uint16_t trustm_open_flag = 0;
 /*************************************************************************
 *  functions

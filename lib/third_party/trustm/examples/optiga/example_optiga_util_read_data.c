@@ -87,8 +87,8 @@ void example_optiga_util_read_data(void)
         bytes_to_read = sizeof(read_data_buffer);
 
         // OPTIGA Comms Shielded connection settings to enable the protection
-        OPTIGA_UTIL_SET_COMMS_PROTOCOL_VERSION(me, OPTIGA_COMMS_PROTOCOL_VERSION_PRE_SHARED_SECRET);
-        OPTIGA_UTIL_SET_COMMS_PROTECTION_LEVEL(me, OPTIGA_COMMS_RESPONSE_PROTECTION);
+        //OPTIGA_UTIL_SET_COMMS_PROTOCOL_VERSION(me, OPTIGA_COMMS_PROTOCOL_VERSION_PRE_SHARED_SECRET);
+        //OPTIGA_UTIL_SET_COMMS_PROTECTION_LEVEL(me, OPTIGA_COMMS_RESPONSE_PROTECTION);
 
         /**
          * 2. Read data from a data object (e.g. certificate data object)
@@ -123,6 +123,7 @@ void example_optiga_util_read_data(void)
          */
         optiga_oid = 0xE0E0;
         bytes_to_read = sizeof(read_data_buffer);
+        printf("optiga_util_read_metadata\r\n");
         optiga_lib_status = OPTIGA_LIB_BUSY;
         return_status = optiga_util_read_metadata(me,
                                                   optiga_oid,

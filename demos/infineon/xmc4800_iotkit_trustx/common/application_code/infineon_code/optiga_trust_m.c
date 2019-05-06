@@ -48,81 +48,144 @@ extern optiga_lib_status_t trustm_OpenCrypto(void);
 extern optiga_lib_status_t trustm_CloseCrypto(void);
 extern optiga_lib_status_t  example_authenticate_chip(void);
 
+extern void example_optiga_crypt_ecc_generate_keypair(void);
+extern void example_optiga_crypt_ecdh(void);
+extern void example_optiga_crypt_ecdsa_sign(void);
+extern void example_optiga_crypt_ecdsa_verify(void);
+extern void example_optiga_crypt_hash(void);
+extern void example_optiga_crypt_random(void);
+extern void example_optiga_crypt_rsa_decrypt_and_export(void);
+extern void example_optiga_crypt_rsa_encrypt_message(void);
+extern void example_optiga_crypt_rsa_encrypt_session(void);
+extern void example_optiga_crypt_rsa_generate_keypair(void);
+extern void example_optiga_crypt_rsa_sign(void);
+extern void example_optiga_crypt_rsa_verify(void);
+extern void example_optiga_crypt_tls_prf_sha256(void);
+extern void example_optiga_util_protected_update(void);
+extern void example_optiga_util_read_data(void);
+extern void example_optiga_util_update_count(void);
+extern void example_optiga_util_write_data(void);
 
-//uint16_t trustm_open_flag = 0;
+void example_log_execution_status(const char_t* function, uint8_t status);
+void example_log_function_name(const char_t* function);
 
-#if 0
+/*************************************************************************
+*  Global
+*************************************************************************/
+optiga_lib_status_t optiga_example_lib_status;
+optiga_util_t * me_example;
+/*************************************************************************
+*  functions
+*************************************************************************/
 /**
- * Callback when optiga_util_xxxx operation is completed asynchronously
+ * Callback when optiga_example_util_ operation is completed asynchronously
  */
-static volatile optiga_lib_status_t optiga_lib_status;
-static void optiga_util_callback(void * context, optiga_lib_status_t return_status)
+
+static void optiga_example_util_callback(void * context, optiga_lib_status_t return_status)
 {
-    optiga_lib_status = return_status;
-    if (NULL != context)
-    {
-        // callback to upper layer here
-    }
+	optiga_example_lib_status = return_status;
+	//printf("optiga_example_util_callback: optiga_lib_status=0x%x\r\n",optiga_example_lib_status);
 }
 
-#endif
-
-#if 0
-static void read_ifx_cert(void)
+void example_log_execution_status(const char_t* function, uint8_t status)
 {
-		uint8_t ifx_cert_hex[800];
-		uint16_t  ifx_cert_hex_len = sizeof(ifx_cert_hex);
-		size_t  ifx_cert_b64_len = 0;
-		uint8_t ifx_cert_b64_temp[1124];
-		uint16_t offset_to_read = 0;
-		uint16_t offset_to_write = 0;
-		uint16_t size_to_copy = 0;
-		optiga_lib_status_t status;
+	printf("%s = %d\r\n", function, status);
+}
 
-		uint16_t optiga_oid;
+void example_log_function_name(const char_t* function)
+{
+	printf("%s\r\n", function);
+}
 
-		optiga_util_t * me = NULL;
-		optiga_oid = 0xE0E1;
+void trustm_open_app()
+{
+	uint16_t i;
+    optiga_lib_status_t return_status;
+    const TickType_t xDelay = 50 / portTICK_PERIOD_MS;
 
-		// IFX_CHECK: eDEVICE_PUBKEY_CERT_IFX or eDEVICE_PUBKEY_CERT_PRJSPC_1
-
-        me = optiga_util_create(0, optiga_util_callback, NULL);
-        if (NULL == me)
+    do
+    {
+        //Create an instance of optiga_util to open the application on OPTIGA.
+        me_example = optiga_util_create(0, optiga_example_util_callback, NULL);
+        if (NULL == me_example)
         {
-            return;
+            printf("vTrustXTaskCallbackHandler: Failed to create Trust M instance\r\n");
+            break;
+        }
+		printf("vTrustXTaskCallbackHandler: Trust M instance created Ok.\r\n");
+
+        /**
+         * Open the application on OPTIGA which is a precondition to perform any other operations
+         * using optiga_util_open_application
+         */
+        optiga_example_lib_status = OPTIGA_LIB_BUSY;
+        return_status = optiga_util_open_application(me_example, 0);
+
+        if (OPTIGA_LIB_SUCCESS != return_status)
+        {
+        	printf("vTrustXTaskCallbackHandler: Failed to open Trust M application\r\n");
+            break;
         }
 
-		while ( (status = optiga_util_read_data(me, optiga_oid, 0, ifx_cert_hex, &ifx_cert_hex_len)) != OPTIGA_LIB_SUCCESS);
 
-		mbedtls_base64_encode((unsigned char *)ifx_cert_b64_temp, sizeof(ifx_cert_b64_temp),
-								&ifx_cert_b64_len,
-								ifx_cert_hex + 9, ifx_cert_hex_len - 9);
-
-		memcpy(CLIENT_CERTIFICATE_PEM, "-----BEGIN CERTIFICATE-----\n", 28);
-		offset_to_write += 28;
-
-		//Properly copy certificate and format it as pkcs expects
-		for (offset_to_read = 0; offset_to_read < ifx_cert_b64_len;)
+        //printf("waiting (max count: 50)");
+        //Wait until the optiga_util_open_application is completed
+		i=0;
+        while (optiga_example_lib_status == OPTIGA_LIB_BUSY)
 		{
-			// The last block of data usually is less than 64, thus we need to find the leftover
-			if ((offset_to_read + 64) >= ifx_cert_b64_len)
-				size_to_copy = ifx_cert_b64_len - offset_to_read;
-			else
-				size_to_copy = 64;
-			memcpy(CLIENT_CERTIFICATE_PEM + offset_to_write, ifx_cert_b64_temp + offset_to_read, size_to_copy);
-			offset_to_write += size_to_copy;
-			offset_to_read += size_to_copy;
-			CLIENT_CERTIFICATE_PEM[offset_to_write] = '\n';
-			offset_to_write++;
+			//printf(".");
+			i++;
+			vTaskDelay(xDelay);
+			if (i == 50)
+				break;
+		}
+        //printf("\n");
+		//printf("count : %d \n",i);
+
+        if (OPTIGA_LIB_SUCCESS != optiga_example_lib_status)
+        {
+			printf("vTrustXTaskCallbackHandler: Failed to open Trust M application. optiga_example_lib_status=0x%x\r\n", optiga_example_lib_status);
+			return_status = optiga_example_lib_status;
+            break;
+        }
+
+        printf("vTrustXTaskCallbackHandler： Open Trust M application Ok.\n");
+    }while(FALSE);
+}
+
+void trustm_close_app()
+{
+	 optiga_lib_status_t return_status;
+	do{
+
+		optiga_example_lib_status = OPTIGA_LIB_BUSY;
+		return_status = optiga_util_close_application(me_example, 0);
+
+		if (OPTIGA_LIB_SUCCESS != return_status)
+		{
+			printf("vTrustXTaskCallbackHandler: Failed to close Trust M.\r\n");
+			break;
 		}
 
-		memcpy(CLIENT_CERTIFICATE_PEM + offset_to_write, "-----END CERTIFICATE-----\n\0", 27);
+		while (optiga_example_lib_status == OPTIGA_LIB_BUSY)
+		{}
 
-		CLIENT_CERTIFICATE_LENGTH = offset_to_write + 27;
+		if (OPTIGA_LIB_SUCCESS != optiga_example_lib_status)
+		{
+			//optiga util close application failed
+			printf("vTrustXTaskCallbackHandler: Fail to close Trust M application.\r\n");
+			return_status = optiga_example_lib_status;
+			break;
+		}
 
-		printf("%s\n", CLIENT_CERTIFICATE_PEM);
+		printf("vTrustXTaskCallbackHandler: Trust M closed Ok.\r\n");
+
+	}while(FALSE);
+
+	// destroy me_example instances
+	if (me_example != NULL)
+		optiga_util_destroy(me_example);
 }
-#endif
 
 void vTrustXInitCallback( TimerHandle_t xTimer )
 {
@@ -214,7 +277,7 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 	    }
 #endif
 
-
+#if 0
 	    optiga_lib_status_t return_status = trustm_OpenCrypto();
 	    if (return_status != OPTIGA_LIB_SUCCESS)
 	    {
@@ -223,14 +286,36 @@ void vTrustXTaskCallbackHandler( void * pvParameters )
 	    else
 	    {
 	    	 example_authenticate_chip();
-
 	    	 trustm_CloseCrypto();
-
 	    }
+#endif
 
-	    //status = example_authenticate_chip();
+	    trustm_open_app();
+	    printf("vTrustXTaskCallbackHandler: Start Examples test...\r\n");
 
-		//read_ifx_cert();
+	    /*
+	    example_optiga_crypt_ecc_generate_keypair();
+	    example_optiga_crypt_ecdsa_sign();
+	    example_optiga_crypt_ecdsa_verify();
+	    example_optiga_crypt_hash();
+	    example_optiga_crypt_random();
+	    example_optiga_crypt_rsa_encrypt_message();
+	    example_optiga_crypt_rsa_generate_keypair();
+	    example_optiga_crypt_rsa_sign();
+	    example_optiga_crypt_rsa_verify();
+	    example_optiga_util_protected_update();
+	    example_optiga_util_read_data();
+	    example_optiga_util_update_count();
+	    example_optiga_util_write_data();
+        */
+	    example_optiga_crypt_tls_prf_sha256();
+	    example_optiga_crypt_ecdh();
+	    example_optiga_crypt_rsa_encrypt_session();
+	    example_optiga_crypt_rsa_decrypt_and_export();
+
+	    printf("vTrustXTaskCallbackHandler: Examples completed.\r\n");
+		trustm_close_app();
+
 
 	    ProvisioningParams_t xParams;
 

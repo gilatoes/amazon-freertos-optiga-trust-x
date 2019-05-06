@@ -135,6 +135,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != return_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 1\r\n");
             break;
         }
 
@@ -146,6 +147,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
         if (OPTIGA_LIB_SUCCESS != optiga_lib_status)
         {
             //Write to data object is failed.
+        	printf("example_optiga_crypt_tls_prf_sha256 error 2\r\n");
             break;
         }
 
@@ -162,6 +164,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != return_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 3\r\n");
             break;
         }
 
@@ -172,6 +175,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != optiga_lib_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 4\r\n");
             //writing metadata to a data object failed.
             break;
         }
@@ -183,6 +187,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
         me = optiga_crypt_create(0, optiga_lib_callback, NULL);
         if (NULL == me)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 5\r\n");
             break;
         }
 
@@ -193,6 +198,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
         optiga_lib_status = OPTIGA_LIB_BUSY;
         
         OPTIGA_CRYPT_SET_COMMS_PROTOCOL_VERSION(me, OPTIGA_COMMS_PROTOCOL_VERSION_PRE_SHARED_SECRET);
+
         // Default protecition for this API is OPTIGA_COMMS_COMMAND_PROTECTION
         return_status = optiga_crypt_tls_prf_sha256(me,
                                                     0xF1D0, /* Input secret OID */
@@ -206,6 +212,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != return_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 6\r\n");
             break;
         }
 
@@ -216,6 +223,10 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != optiga_lib_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 7 ####\r\n");
+        	printf("return_status=0x%x\r\n",return_status);
+        	printf("optiga_lib_status=0x%x\r\n",optiga_lib_status);
+
             //Derive key operation failed.
             break;
         }
@@ -232,6 +243,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != return_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 8\r\n");
             break;
         }
 
@@ -242,6 +254,7 @@ void example_optiga_crypt_tls_prf_sha256(void)
 
         if (OPTIGA_LIB_SUCCESS != optiga_lib_status)
         {
+        	printf("example_optiga_crypt_tls_prf_sha256 error 9\r\n");
             //writing metadata to a data object failed.
             break;
         }

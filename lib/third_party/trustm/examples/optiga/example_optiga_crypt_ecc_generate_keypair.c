@@ -72,6 +72,7 @@ void example_optiga_crypt_ecc_generate_keypair(void)
 
     optiga_crypt_t * me = NULL;
     uint8_t logging_status = 0;
+
     example_log_function_name(__FUNCTION__);
 
     do
@@ -127,7 +128,9 @@ void example_optiga_crypt_ecc_generate_keypair(void)
         //Destroy the instance after the completion of usecase if not required.
         return_status = optiga_crypt_destroy(me);
     }
+
     example_log_execution_status(__FUNCTION__,logging_status);
+    return;
 }
 
 #endif  //OPTIGA_CRYPT_ECC_GENERATE_KEYPAIR_ENABLED

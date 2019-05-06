@@ -1768,7 +1768,7 @@ optiga_lib_status_t optiga_cmd_get_random(optiga_cmd_t * me, uint8_t cmd_param, 
 {
     optiga_cmd_state_t cmd_handler_state = OPTIGA_CMD_EXEC_REQUEST_LOCK;
 
-    printf(">optiga_cmd_get_random()\r\n");
+    //printf(">optiga_cmd_get_random()\r\n");
 
     if (CMD_RANDOM_PARAM_TYPE_PRE_MASTER_SECRET == cmd_param)
     {
@@ -1781,7 +1781,7 @@ optiga_lib_status_t optiga_cmd_get_random(optiga_cmd_t * me, uint8_t cmd_param, 
                        cmd_handler_state,
                        params);
 
-    printf("<optiga_cmd_get_random()\r\n");
+    //printf("<optiga_cmd_get_random()\r\n");
 
     return (OPTIGA_LIB_SUCCESS);
 }

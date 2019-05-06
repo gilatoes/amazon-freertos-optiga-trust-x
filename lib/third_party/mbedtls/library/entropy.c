@@ -329,8 +329,11 @@ int mbedtls_entropy_func( void *data, unsigned char *output, size_t len )
     mbedtls_entropy_context *ctx = (mbedtls_entropy_context *) data;
     unsigned char buf[MBEDTLS_ENTROPY_BLOCK_SIZE];
 
-    if( len > MBEDTLS_ENTROPY_BLOCK_SIZE )
+    //printf(">mbedtls_entropy_func()\r\n");
+
+    if( len > MBEDTLS_ENTROPY_BLOCK_SIZE ){
         return( MBEDTLS_ERR_ENTROPY_SOURCE_FAILED );
+    }
 
 #if defined(MBEDTLS_ENTROPY_NV_SEED)
     /* Update the NV entropy seed before generating any entropy for outside
@@ -345,8 +348,12 @@ int mbedtls_entropy_func( void *data, unsigned char *output, size_t len )
 #endif
 
 #if defined(MBEDTLS_THREADING_C)
-    if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 )
+    if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 ){
+    	//printf("mbedtls_entropy_func() mbedtls_mutex_lock != 0 ret =");
+    	//int x=ret;
+    	//printf("%s%x\n", x<0?"-0x":"", x<0?-(unsigned)x:x, "\r\n");
         return( ret );
+    }
 #endif
 
     /*
@@ -435,6 +442,8 @@ exit:
     if( mbedtls_mutex_unlock( &ctx->mutex ) != 0 )
         return( MBEDTLS_ERR_THREADING_MUTEX_ERROR );
 #endif
+
+    //printf("<mbedtls_entropy_func()\r\n");
 
     return( ret );
 }

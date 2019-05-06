@@ -58,6 +58,7 @@ void mbedtls_ctr_drbg_init( mbedtls_ctr_drbg_context *ctx )
     memset( ctx, 0, sizeof( mbedtls_ctr_drbg_context ) );
 
 #if defined(MBEDTLS_THREADING_C)
+    //printf("mbedtls_ctr_drbg_init(): Init Mutex\r\n");
     mbedtls_mutex_init( &ctx->mutex );
 #endif
 }
@@ -87,18 +88,26 @@ int mbedtls_ctr_drbg_seed_entropy_len(
     ctx->entropy_len = entropy_len;
     ctx->reseed_interval = MBEDTLS_CTR_DRBG_RESEED_INTERVAL;
 
+    //printf(">mbedtls_ctr_drbg_seed_entropy_len()\r\n");
+
     /*
      * Initialize with an empty key
      */
     if( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
+    	 printf("mbedtls_ctr_drbg_seed_entropy_len():mbedtls_aes_setkey_enc 0x%x\r\n",ret);
         return( ret );
     }
 
     if( ( ret = mbedtls_ctr_drbg_reseed( ctx, custom, len ) ) != 0 )
     {
+    	printf("mbedtls_ctr_drbg_seed_entropy_len(): mbedtls_ctr_drbg_reseed !=0 ret = ");
+    	int x=ret;
+    	printf("%s%x\n", x<0?"-0x":"", x<0?-(unsigned)x:x, "\r\n");
         return( ret );
     }
+
+    //printf("<mbedtls_ctr_drbg_seed_entropy_len()\r\n");
     return( 0 );
 }
 
@@ -325,6 +334,8 @@ int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
     size_t seedlen = 0;
     int ret;
 
+    //printf(">mbedtls_ctr_drbg_reseed()\r\n");
+
     if( ctx->entropy_len > MBEDTLS_CTR_DRBG_MAX_SEED_INPUT ||
         len > MBEDTLS_CTR_DRBG_MAX_SEED_INPUT - ctx->entropy_len )
         return( MBEDTLS_ERR_CTR_DRBG_INPUT_TOO_BIG );
@@ -337,6 +348,7 @@ int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
     if( 0 != ctx->f_entropy( ctx->p_entropy, seed,
                              ctx->entropy_len ) )
     {
+    	//printf("mbedtls_ctr_drbg_reseed(): return MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED\r\n");
         return( MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED );
     }
 
@@ -367,6 +379,8 @@ int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
         return( ret );
     }
     ctx->reseed_counter = 1;
+
+    //printf("<mbedtls_ctr_drbg_reseed()\r\n");
 
     return( 0 );
 }
