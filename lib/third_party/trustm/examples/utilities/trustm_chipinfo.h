@@ -47,6 +47,7 @@ typedef union _tag_utrustm_UID {
 	trustm_UID_t st;
 } utrustm_UID_t;
 
-optiga_lib_status_t trustm_readUID(utrustm_UID_t *UID);
-optiga_lib_status_t trustm_Open(void);
-optiga_lib_status_t trustm_Close(void);
+//optiga_lib_status_t trustm_readUID(utrustm_UID_t *UID);
+void example_optiga_util_read_uid(void);
+//optiga_lib_status_t trustm_Open(void);
+//optiga_lib_status_t trustm_Close(void);

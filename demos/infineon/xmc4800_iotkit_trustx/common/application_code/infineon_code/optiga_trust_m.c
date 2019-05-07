@@ -87,12 +87,12 @@ static void optiga_example_util_callback(void * context, optiga_lib_status_t ret
 
 void example_log_execution_status(const char_t* function, uint8_t status)
 {
-	printf("%s = %d\r\n", function, status);
+	printf("<%s = %d\r\n", function, status);
 }
 
 void example_log_function_name(const char_t* function)
 {
-	printf("%s\r\n", function);
+	printf(">%s\r\n", function);
 }
 
 void trustm_open_app()
@@ -201,81 +201,8 @@ void vTrustMTaskCallbackHandler( void * pvParameters )
 	    	pal_os_event_init();
 	    }while(FALSE);
 
-#if 0
-	    utrustm_UID_t UID;
-	    optiga_lib_status_t return_status = trustm_Open();
-	    if (return_status != OPTIGA_LIB_SUCCESS)
-	    {
-	    	printf("vTrustMTaskCallbackHandler: error opening Trust M.");
-	    }
-	    else
-	    {
-			return_status = trustm_readUID(&UID);
 
-			if (return_status != OPTIGA_LIB_SUCCESS)
-			{
-				printf("vTrustMTaskCallbackHandler: readUID [0xE0C2] failed\n");
-			}
-			else
-			{
-				printf("==================== Trust M Chip Info ===========================\n");
-				printf("CIM Identifier             [bCimIdentifer]: 0x%.2x\n", UID.st.bCimIdentifer);
-				printf("Platform Identifer   [bPlatformIdentifier]: 0x%.2x\n", UID.st.bPlatformIdentifier);
-				printf("Model Identifer         [bModelIdentifier]: 0x%.2x\n", UID.st.bModelIdentifier);
-				printf("ID of ROM mask                  [wROMCode]: 0x%.2x%.2x\n",
-										UID.st.wROMCode[0],
-										UID.st.wROMCode[1]);
-				printf("Chip Type                    [rgbChipType]: 0x%.2x 0x%.2x 0x%.2x 0x%.2x 0x%.2x 0x%.2x\n",
-										UID.st.rgbChipType[0],
-										UID.st.rgbChipType[1],
-										UID.st.rgbChipType[2],
-										UID.st.rgbChipType[3],
-										UID.st.rgbChipType[4],
-										UID.st.rgbChipType[5]);
-				printf("Batch Number              [rgbBatchNumber]: 0x%.2x 0x%.2x 0x%.2x 0x%.2x 0x%.2x 0x%.2x\n",
-										UID.st.rgbBatchNumber[0],
-										UID.st.rgbBatchNumber[1],
-										UID.st.rgbBatchNumber[2],
-										UID.st.rgbBatchNumber[3],
-										UID.st.rgbBatchNumber[4],
-										UID.st.rgbBatchNumber[5]);
-				printf("X-coordinate              [wChipPositionX]: 0x%.2x%.2x\n",
-										UID.st.wChipPositionX[0],
-										UID.st.wChipPositionX[1]);
-				printf("Y-coordinate              [wChipPositionY]: 0x%.2x%.2x\n",
-										UID.st.wChipPositionY[0],
-										UID.st.wChipPositionY[1]);
-				printf("Firmware Identifier [dwFirmwareIdentifier]: 0x%.2x%.2x%.2x%.2x\n",
-										UID.st.dwFirmwareIdentifier[0],
-										UID.st.dwFirmwareIdentifier[1],
-										UID.st.dwFirmwareIdentifier[2],
-										UID.st.dwFirmwareIdentifier[3]);
-				printf("Build Number                 [rgbESWBuild]: %.2x %.2x\n",
-										UID.st.rgbESWBuild[0],
-										UID.st.rgbESWBuild[1]);
-				}
-				printf("\n");
-
-				printf("Chip software build ");
-				if ((UID.st.rgbESWBuild[0] == 0x05) && (UID.st.rgbESWBuild[1] == 0x10))
-					printf("V1.0.510\n");
-				else if ((UID.st.rgbESWBuild[0] == 0x07) && (UID.st.rgbESWBuild[1] == 0x15))
-					printf("V1.1.715\n");
-				else if ((UID.st.rgbESWBuild[0] == 0x10) && (UID.st.rgbESWBuild[1] == 0x48))
-					printf("V1.2.1048\n");
-				else if ((UID.st.rgbESWBuild[0] == 0x11) && (UID.st.rgbESWBuild[1] == 0x12))
-					printf("V1.30.1112\n");
-				else if ((UID.st.rgbESWBuild[0] == 0x11) && (UID.st.rgbESWBuild[1] == 0x18))
-					printf("V1.40.1118\n");
-				else
-					printf("Unknown\n");
-				printf("====================================================================\n");
-
-				trustm_Close();
-	    }
-#endif
-
-#if 0
+#if 1
 	    optiga_lib_status_t return_status = trustm_OpenCrypto();
 	    if (return_status != OPTIGA_LIB_SUCCESS)
 	    {
@@ -291,7 +218,7 @@ void vTrustMTaskCallbackHandler( void * pvParameters )
 	    trustm_open_app();
 	    printf("vTrustMTaskCallbackHandler: Start Examples test...\r\n");
 
-	    /*
+	    example_optiga_util_read_uid();
 	    example_optiga_crypt_ecc_generate_keypair();
 	    example_optiga_crypt_ecdsa_sign();
 	    example_optiga_crypt_ecdsa_verify();
@@ -305,7 +232,7 @@ void vTrustMTaskCallbackHandler( void * pvParameters )
 	    example_optiga_util_read_data();
 	    example_optiga_util_update_count();
 	    example_optiga_util_write_data();
-        */
+
 	    example_optiga_crypt_tls_prf_sha256();
 	    example_optiga_crypt_ecdh();
 	    example_optiga_crypt_rsa_encrypt_session();

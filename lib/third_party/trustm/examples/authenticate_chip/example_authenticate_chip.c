@@ -570,8 +570,6 @@ optiga_lib_status_t example_authenticate_chip(void)
 	uint16_t chip_cert_oid = 0xE0E0;
 	uint16_t chip_privkey_oid = 0xE0F1;
 
-	//printf(">example_authenticate_chip()\r\n");
-
 
     do
     {
